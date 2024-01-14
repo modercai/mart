@@ -19,8 +19,9 @@ from django.urls import path, include
 from core.views import Home, about
 
 urlpatterns = [
-    path('',include('store.urls')),
-    path('',Home, name="home"),
     path('about/',about,name='about'),
     path('admin/', admin.site.urls),
+    path('',include('store.urls')),
+    path('',Home, name="home"),
 ]
+
