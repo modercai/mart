@@ -1,3 +1,4 @@
+{% load menu %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -18,15 +19,28 @@
               <p class="sr-only">Website Title</p>
             </a>
           </div>
+
           <div
             class="hidden md:flex md:items-center md:justify-center md:gap-5"
           >
+
+          <div class="relative">
+            <button id="dropdownButton" class="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900">
+                Categories
+            </button>
+            <div id="dropdownContent" class="absolute left-0 z-10 hidden w-44 bg-white shadow-lg">
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{% menu %}</a>
+                <!-- Add more categories as needed -->
+            </div>
+        </div>
+
             <a
               aria-current="page"
               class="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
               href="/"
               >Products</a
             >
+            
             <a
               class="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
               href=" {% url 'about' %}"
@@ -51,5 +65,16 @@
     <div class="mx-w-4xl mx-auto pt-40 flex">
         {% block content %} 
         {% endblock content %}</div>
+
+        <script>
+          document.getElementById('dropdownButton').addEventListener('click', function() {
+              var dropdownContent = document.getElementById('dropdownContent');
+              if (dropdownContent.classList.contains('hidden')) {
+                  dropdownContent.classList.remove('hidden');
+              } else {
+                  dropdownContent.classList.add('hidden');
+              }
+          });
+      </script>
   </body>
 </html>
