@@ -1,0 +1,17 @@
+{% extends "core/base.html" %}
+
+{% block title %}My Account{% endblock title %}
+
+
+{% block content %}
+
+<div class='flex flex-col space-x-20'>
+    <h1>My Account</h1>
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class='bg-red-400 p-5 text-white'>Logout</button>
+    </form>
+</div>
+
+
+{% endblock content %}
