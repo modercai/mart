@@ -1,0 +1,29 @@
+{% extends "core/base.html" %}
+
+{% block title %}Login{% endblock title %}
+
+{% block content %}
+
+<div class="container mx-auto max-w-md p-4">
+    <h1 class="text-2xl font-bold mb-4">Login</h1>
+    
+    <form method="post" action="." class="space-y-4">
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <div>
+                <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Login
+        </button>
+    </form>
+</div>
+
+{% endblock content %}

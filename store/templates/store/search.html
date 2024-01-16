@@ -1,9 +1,16 @@
 {% extends "core/base.html" %}
 
-{% block title %}Categories{% endblock title %} 
+{% block title %}Results{% endblock title %}
 
 {% block content %}
+
+<div class='pl-20 font-bold text-2xl '>
+    <h1 >Searched for.........{{query}}</h1>
+</div>
+
+
 {% for product in products %}
+{% if product %}
 <div class="pl-20">
     <div class="relative flex w-96 flex-col rounded-xl bg-gray-100 bg-clip-border text-gray-700 shadow-md">
         <div class="relative mx-4 mt-4 h-96 overflow-hidden rounded-xl bg-white bg-clip-border text-gray-700">
@@ -29,6 +36,7 @@
           </p>
         </div>
         <div class="p-6 pt-0">
+            
           <a href="{% url "product_detail" product.category.slug product.slug %}">
             <button
             class="block w-full select-none rounded-lg bg-gray-200 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
@@ -39,8 +47,11 @@
           </a>
         </div>
       </div>
+      {% else %}
+          <h1>No results found</h1>
+     {% endif %}
 </div>
+
 {% endfor %}
- 
 
 {% endblock content %}
