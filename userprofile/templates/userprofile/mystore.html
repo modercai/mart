@@ -1,0 +1,68 @@
+{% extends "core/base.html" %} 
+{% block title %}My Store{% endblock title %}
+
+
+{% block content %}
+
+<div class="pl-40">
+  <h1 class="space-x-20 text-4xl font-bold">My Store</h1>
+  <a href="{% url 'add_product' %}" class=" mt-5 text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">Add Product</a>
+
+  {% if messages %}
+  {% for message in messages %}
+  <div class="px-8 py-4 bg-teal-200 text-teal-800">
+    {{message}}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <div class='flex mt-10'>  
+  {% if request.user.products.all %}
+  {% for product in products %}
+<div class="pl-20 flex grid-cols-3">
+    <div class="relative flex w-96 flex-col rounded-xl bg-gray-100 bg-clip-border text-gray-700 shadow-md">
+        <div class="relative mx-4 mt-4 h-96 overflow-hidden rounded-xl bg-white bg-clip-border text-gray-700">
+          {% if product.image %}
+          <img
+            src="{{product.image.url}}"
+            class="h-full w-full object-cover"
+            alt="{Image of product.title}"
+          />
+          {% endif %}
+        </div>
+        <div class="p-6">
+          <div class="mb-2 flex items-center justify-between">
+            <p class="block font-sans text-base font-medium leading-relaxed text-blue-gray-900 antialiased">
+              {{product.title}}
+            </p>
+            <p class="block font-sans text-base font-medium leading-relaxed text-blue-gray-900 antialiased">
+                K {{product.price}}
+            </p>
+          </div>
+          <p class="block font-sans text-sm font-normal leading-normal text-gray-700 antialiased opacity-75">
+            
+          </p>
+        </div>
+        <div class="p-6 pt-0">
+          <a href="{% url "edit-product" product.id %}">
+            <button
+            class="block w-full select-none rounded-lg bg-gray-200 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            type="button"
+          > 
+            Edit
+          </button>
+          </a>
+        </div>
+      </div>
+</div>
+{% endfor %}
+  {% else %}
+  <h3 class="flex flex-col mt-5 text-2xl">
+    You currently dont have any products, click the button at the top to add
+    some products
+  </h3>
+  {% endif %}
+</div>
+</div>
+
+{% endblock content %}
