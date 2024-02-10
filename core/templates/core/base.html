@@ -55,16 +55,31 @@
           </div>
           <div class="flex items-center justify-end gap-3">
             {% if request.user.is_authenticated %}
-            <a
-            class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-            href="{% url 'myaccount' %}"
-            >My Account</a
-          >
-          <a
-            class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-            href="{% url 'mystore' %}"
-            >My Store</a
-          >
+            <div class="relative">
+              <img 
+                class="inline-block h-10 w-10 rounded-full ring-2 ring-white" 
+                src="https://pxbar.com/wp-content/uploads/2023/09/instagram-profile-picture.jpg" 
+                alt="User Menu"
+                id="userMenuButton" 
+                aria-haspopup="true" 
+              />
+  
+              <!-- Dropdown Menu -->
+              <div class="absolute right-0 z-50 hidden mt-2 w-48 py-1 bg-white rounded-md shadow-lg" id="userMenu">
+                <a 
+                  href="{% url 'myaccount' %}" 
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  My Account
+                </a>
+                <a 
+                  href="{% url 'mystore' %}" 
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  My Store
+                </a>
+              </div>
+            </div>
 
         {% else %}
             <a
@@ -86,6 +101,17 @@
     <div class="pt-40 flex">
         {% block content %} 
         {% endblock content %}</div>
+        <footer class="bg-gray-500 text-white mt-8 py-4">
+          <div class="max-w-screen-lg mx-auto px-4">
+            <div class="text-center">
+              <p>&copy; {{ current_year }} mart. All rights reserved.</p>
+              <p class="text-sm mt-2">
+                <a href="#" class="hover:underline">Privacy Policy</a> |
+                <a href="#" class="hover:underline">Terms of Service</a>
+              </p>
+            </div>
+          </div>
+        </footer>
 
         <script>
           document.getElementById('dropdownButton').addEventListener('click', function() {
@@ -96,6 +122,17 @@
                   dropdownContent.classList.add('hidden');
               }
           });
+      </script>
+      <script>
+        // Dropdown Menu script
+        document.getElementById('userMenuButton').addEventListener('click', function() {
+          var userMenu = document.getElementById('userMenu');
+          if (userMenu.classList.contains('hidden')) {
+            userMenu.classList.remove('hidden');
+          } else {
+            userMenu.classList.add('hidden');
+          }
+        });
       </script>
   </body>
 </html>
