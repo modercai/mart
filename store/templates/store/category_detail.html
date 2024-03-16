@@ -7,13 +7,13 @@
 <div class="pl-20">
     <div class="relative flex w-96 flex-col rounded-xl bg-gray-100 bg-clip-border text-gray-700 shadow-md">
         <div class="relative mx-4 mt-4 h-96 overflow-hidden rounded-xl bg-white bg-clip-border text-gray-700">
-          {% if product.image %}
+          
           <img
-            src="{{product.image.url}}"
+            src="{{product.get_thumbnail}}"
             class="h-full w-full object-cover"
             alt="{Image of product.title}"
           />
-          {% endif %}
+         
         </div>
         <div class="p-6">
           <div class="mb-2 flex items-center justify-between">

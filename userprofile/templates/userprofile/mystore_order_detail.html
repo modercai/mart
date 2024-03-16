@@ -1,0 +1,11 @@
+{% extends "core/base.html" %}
+
+{% block title %}Order Detail - {{order.id}}{% endblock title %}
+
+{% block content %}
+
+{% for item in order.items.all %}
+{% if item.product.user == request.user %}
+{% endif %}
+{% endfor %}
+{% endblock %}

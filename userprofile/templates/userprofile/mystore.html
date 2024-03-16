@@ -4,54 +4,95 @@
 
 {% block content %}
 
-<div class="container mx-auto px-4">
-    <h1 class="text-4xl font-bold mt-6 mb-4">My Store</h1>
-    <a href="{% url 'add_product' %}" class="inline-block text-sm px-6 py-2.5 bg-purple-700 text-white font-medium rounded-full hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 mb-4">Add Product</a>
+<body class="bg-gray-100">
 
-    {% if messages %}
-        <div class="space-y-2">
-            {% for message in messages %}
-                <div class="px-6 py-3 bg-teal-200 text-teal-800 rounded-md">
-                    {{ message }}
-                </div>
-            {% endfor %}
+<!-- Main Content -->
+<main class="container mx-auto px-4 py-6">
+
+    <!-- Vendor Information -->
+    <section class="mb-8">
+        <h2 class="text-xl font-bold mb-4">Information</h2>
+        <div class="flex justify-between items-center bg-gray-200 p-4 rounded-md">
+            <div>
+                <h3 class="text-lg font-semibold">Vendor Name: John Doe</h3>
+                <p>Email: john@example.com<div class="container mx-auto px-4">
+                </p>
+            </div>
+            <div>
+                <p>Total Earnings: ZMW 5000</p>
+            </div>
         </div>
-    {% endif %}
+    </section>
 
-    <div class="mt-5">
-        {% if request.user.products.all %}
-            {% for product in products %}
-                <div class="pl-20 flex grid-cols-3">
-                    <div class="relative flex w-96 flex-col rounded-xl bg-gray-100 bg-clip-border text-gray-700 shadow-md">
-                        <div class="relative mx-4 mt-4 h-96 overflow-hidden rounded-xl bg-white bg-clip-border text-gray-700">
-                            {% if product.image %}
-                                <img src="{{ product.image.url }}" class="h-full w-full object-cover" alt="{Image of product.title}" />
-                            {% endif %}
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-2 flex items-center justify-between">
-                                <p class="block font-sans text-base font-medium leading-relaxed text-blue-gray-900 antialiased">
-                                    {{ product.title }}
-                                </p>
-                                <p class="block font-sans text-base font-medium leading-relaxed text-blue-gray-900 antialiased">
-                                    K {{ product.price }}
-                                </p>
+    <!-- Vendor Orders -->
+    <section>
+        <h2 class="text-xl font-bold mb-4">Vendor Orders</h2>
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Amount</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <!-- Order Row (Sample) -->
+                {% for order_item in order_items  %}
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">{{order_item.order.id}}</td>
+                    <td class="px-6 py-4 whitespace-nowrap"><a href='{% url "mystore-order-detail" order_item.order.id %}'>{{order_item.product.title}}</a></td>
+                   <td class="px-6 py-4 whitespace-nowrap">ZMW {{order_item.price}}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{order_item.quantity}}</td>
+                </tr>
+                {% endfor %}
+                <!-- Add more order rows here -->
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Vendor Products -->
+    <section class="mb-8">
+        <h2 class="text-xl font-bold mb-4">Vendor Products</h2>
+            <a href="{% url 'add_product' %}" class="inline-block text-sm px-6 py-2.5 bg-purple-700 text-white font-medium rounded-full hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 mb-4">Add Product</a>        
+        <div class="mt-5">
+            {% if request.user.products.all %}
+                {% for product in products %}
+                    <div class="pl-20 flex grid-cols-3">
+                        <div class="relative flex w-96 flex-col rounded-xl bg-gray-100 bg-clip-border text-gray-700 shadow-md">
+                            <div class="relative mx-4 mt-4 h-96 overflow-hidden rounded-xl bg-white bg-clip-border text-gray-700">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" class="h-full w-full object-cover" alt="{Image of product.title}" />
+                                {% endif %}
+                            </div>
+                            <div class="p-6">
+                                <div class="mb-2 flex items-center justify-between">
+                                    <p class="block font-sans text-base font-medium leading-relaxed text-blue-gray-900 antialiased">
+                                        {{ product.title }}
+                                    </p>
+                                    <p class="block font-sans text-base font-medium leading-relaxed text-blue-gray-900 antialiased">
+                                        K {{ product.price }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="p-6 pt-0">
+                                <a href="{% url "edit-product" product.id %}">
+                                    <button class="block w-full select-none rounded-lg bg-gray-200 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button"> 
+                                        Edit
+                                    </button>
+                                </a>
                             </div>
                         </div>
-                        <div class="p-6 pt-0">
-                            <a href="{% url "edit-product" product.id %}">
-                                <button class="block w-full select-none rounded-lg bg-gray-200 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button"> 
-                                    Edit
-                                </button>
-                            </a>
-                        </div>
                     </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <h3 class="text-2xl">You currently don't have any products. Click the button at the top to add some products.</h3>
-        {% endif %}
-    </div>
-</div>
+                {% endfor %}
+            {% else %}
+                <h3 class="text-2xl">You currently don't have any products. Click the button at the top to add some products.</h3>
+            {% endif %}
+        </div>
+    </section>
+</main>
+</body>
+</html>
+
 
 {% endblock content %}
