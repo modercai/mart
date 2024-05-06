@@ -21,7 +21,7 @@ def vendor_detail(request,pk):
 def mystore(request):
     products = request.user.products.exclude(status=Product.DELETED)
     order_items = OrderItem.objects.filter(product__user=request.user)
-    return render(request, 'userprofile/mystore.html',{'products':products,'order_items':order_items})
+    return render(request, 'userprofile/dashboard/dashboard.html',{'products':products,'order_items':order_items})
 
 @login_required
 def mystore_order_detail(request, pk):
@@ -40,7 +40,7 @@ def add_product(request):
             product.slug = slugify(title)
             product.save()
             messages.success(request, "Product added successfully.") 
-            return redirect('mystore')
+            return redirect('vendor-products')
     else:
         form = ProductForm()
     return render(request, 'userprofile/add_product.html',{
@@ -56,7 +56,7 @@ def edit_product(request,pk):
         if form.is_valid():
             form.save()
             messages.success(request, "Product details updated successfully.")
-            return redirect('mystore')
+            return redirect('vendor-products')
     else:
         form = ProductForm(instance=product)
     return render(request, 'userprofile/add_product.html',{
@@ -70,7 +70,7 @@ def delete_product(request,pk):
     product.status = Product.DELETED
     product.save()
     messages.success(request, "Product was deleted successfully.")
-    return redirect('mystore')
+    return redirect('vendor-products')
     
 
 def signup(request):
@@ -94,3 +94,21 @@ def signup(request):
 @login_required
 def myaccount(request):
     return render(request,'userprofile/myaccount.html')
+
+
+@login_required
+def vendor_products(request):
+    products = request.user.products.exclude(status=Product.DELETED)
+    return render(request, 'userprofile/dashboard/product.html',{'products':products})
+
+@login_required
+def earnings(request):
+    return render(request, 'userprofile/dashboard/earnings.html')
+
+@login_required
+def orders(request):
+    order_items = OrderItem.objects.filter(product__user=request.user)
+    products = request.user.products.exclude(status=Product.DELETED)
+    return render(request, 'userprofile/dashboard/orders.html',{'order_items':order_items,})
+
+

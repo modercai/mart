@@ -1,25 +1,48 @@
-{% extends "core/base.html" %}
+{% extends "userprofile/dashboard/dashboard.html" %}
 
-{% block title %}{{title}}{% endblock title %}
+{% block title %}Add Product{% endblock title %}
 
 {% block content %}
-<div class="container mx-auto px-4">
-    <h1 class="text-3xl font-bold my-4">{{title}}</h1>
-    <div class="bg-white shadow-md rounded px-10 pt-8 pb-10 mb-4">
+<div class="container mx-auto px-4 lg:px-0">
+    <h1 class="text-3xl font-bold my-4">{{ title }}</h1>
+    <div class="bg-white shadow-md rounded px-10 pt-2 pb-10 mb-4">
         <form method="post" action="." enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="mb-4">
+            <fieldset class="mb-6 border border-gray-300 p-4 rounded">
+                <legend class="text-xl font-semibold mb-2">Product Details</legend>
                 {{ form.as_p }}
+            </fieldset>
+
+            <div class="space-x-10 ">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline">
+                    Submit
+                </button>
+
+                {% if product %}
+                <a href="{% url 'delete-product' product.id %}" class="text-red-500 hover:text-red-700 mt-6 inline-block">
+                    Delete Product 
+                </a>
+            {% endif %}
+        </div>
+<br>
             </div>
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline">
-                Submit
-            </button>
+           
         </form>
-        {% if product %}
-            <a href="{% url 'delete-product' product.id %}" class="text-red-500 hover:text-red-700 mt-6 inline-block">
-                Delete Product
-            </a>
-        {% endif %}
-    </div>
+       
 </div>
+<style>
+    /* Media query for smaller screens */
+    @media (max-width: 768px) {
+        /* Increase padding for better readability on small screens */
+        .container {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        /* Adjust width for input fields on small screens */
+        fieldset input, fieldset textarea, fieldset select {
+            width: 100%;
+        }
+    }
+</style>
 {% endblock content %}

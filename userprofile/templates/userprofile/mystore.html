@@ -1,61 +1,45 @@
-{% extends "core/base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}My Store{% endblock title %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Dashboard</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
 
-{% block content %}
-
-<body class="bg-gray-100">
-
-<!-- Main Content -->
-<main class="container mx-auto px-4 py-6">
-
-    <!-- Vendor Information -->
-    <section class="mb-8">
-        <h2 class="text-xl font-bold mb-4">Information</h2>
-        <div class="flex justify-between items-center bg-gray-200 p-4 rounded-md">
-            <div>
-                <h3 class="text-lg font-semibold">Vendor Name: John Doe</h3>
-                <p>Email: john@example.com<div class="container mx-auto px-4">
-                </p>
-            </div>
-            <div>
-                <p>Total Earnings: ZMW 5000</p>
+<body class="bg-gray-100 font-sans">
+    <!-- Side Navigation Bar -->
+    <div class="flex h-screen">
+        <div class="w-1/5 bg-purple-400 text-gray-100">
+            <div class="p-4">
+                <h1 class="text-lg font-bold mb-4">Seller Dashboard</h1>
+                <ul class="space-y-2">
+                    <li><a href="#" class="block py-2 px-4 hover:bg-gray-700" onclick="showSection('products')">Products</a></li>
+                    <li><a href="#" class="block py-2 px-4 hover:bg-gray-700" onclick="showSection('earnings')">Earnings</a></li>
+                    <li><a href="#" class="block py-2 px-4 hover:bg-gray-700" onclick="showSection('orders')">Orders</a></li>
+                    <li><a href="#" class="block py-2 px-4 hover:bg-gray-700" onclick="showSection('messages')">Notifications</a></li>
+                    <li><a href="#" class="block py-2 px-4 hover:bg-gray-700" onclick="showSection('vendorDetails')">Profile</a></li>
+                </ul>
             </div>
         </div>
-    </section>
-
-    <!-- Vendor Orders -->
-    <section>
-        <h2 class="text-xl font-bold mb-4">Vendor Orders</h2>
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product Name</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Amount</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                <!-- Order Row (Sample) -->
-                {% for order_item in order_items  %}
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">{{order_item.order.id}}</td>
-                    <td class="px-6 py-4 whitespace-nowrap"><a href='{% url "mystore-order-detail" order_item.order.id %}'>{{order_item.product.title}}</a></td>
-                   <td class="px-6 py-4 whitespace-nowrap">ZMW {{order_item.price}}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{order_item.quantity}}</td>
-                </tr>
-                {% endfor %}
-                <!-- Add more order rows here -->
-            </tbody>
-        </table>
-    </section>
-
-    <!-- Vendor Products -->
+        <!-- Main Content Area -->
+        <div class="w-4/5 p-8" id="mainContent">
+            <!-- Products Section -->
+            <div class="mb-8" id="productsSection">
+                  <!-- Vendor Products -->
     <section class="mb-8">
         <h2 class="text-xl font-bold mb-4">Vendor Products</h2>
-            <a href="{% url 'add_product' %}" class="inline-block text-sm px-6 py-2.5 bg-purple-700 text-white font-medium rounded-full hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 mb-4">Add Product</a>        
-        <div class="mt-5">
+            <div class="flex justify-center">
+                <a href="{% url 'add_product' %}" class="inline-block text-sm px-6 py-2.5 bg-purple-700 text-white font-medium rounded-full hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 mb-4">add product(+)</a>
+            </div>        
+        <div class="mt-5 flex">
             {% if request.user.products.all %}
                 {% for product in products %}
                     <div class="pl-20 flex grid-cols-3">
@@ -90,9 +74,92 @@
             {% endif %}
         </div>
     </section>
-</main>
+            </div>
+            <!-- Earnings Overview -->
+            <div class="mb-8 hidden" id="earningsSection">
+                <h2 class="text-lg font-semibold mb-4">Earnings Overview</h2>
+                <!-- Earnings Summary -->
+                <div class="bg-white rounded-lg shadow-md p-4">
+                    <p>Total Revenue: $XXXX</p>
+                    <p>Sales Breakdown: XXXX</p>
+                    <p>Pending Payments: XXXX</p>
+                </div>
+            </div>
+            <!-- Vendor Details -->
+            <div class="mb-8 hidden" id="vendorDetailsSection">
+                   <!-- Vendor Information -->
+    <section class="mb-8">
+        <h2 class="text-xl font-bold mb-4">Information</h2>
+        <div class="flex justify-between items-center bg-gray-200 p-4 rounded-md">
+            <div>
+                <h3 class="text-lg font-semibold">Vendor Name: John Doe</h3>
+                <p>Email: john@example.com<div class="container mx-auto px-4">
+                </p>
+            </div>
+            <div>
+                <p>Total Earnings: ZMW 5000</p>
+            </div>
+        </div>
+    </section>
+            </div>
+            <!-- Orders Section -->
+            <div class="mb-8 hidden" id="ordersSection">
+                <section>
+                    <h2 class="text-xl font-bold mb-4">Vendor Orders</h2>
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Amount</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <!-- Order Row (Sample) -->
+                            {% for order_item in order_items  %}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">{{order_item.order.id}}</td>
+                                <td class="px-6 py-4 whitespace-nowrap"><a href='{% url "mystore-order-detail" order_item.order.id %}'>{{order_item.product.title}}</a></td>
+                               <td class="px-6 py-4 whitespace-nowrap">ZMW {{order_item.price}}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{order_item.quantity}}</td>
+                            </tr>
+                            {% endfor %}
+                            <!-- Add more order rows here -->
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+            <!-- Messages Section -->
+            <div class="hidden" id="messagesSection">
+                <h2 class="text-lg font-semibold mb-4">Messages</h2>
+                <!-- Messaging Interface -->
+                <div class="bg-white rounded-lg shadow-md p-4">
+                    <!-- Message Threads -->
+                    <div>
+                        <!-- Sample Message Thread -->
+                        <div class="flex justify-between mb-4">
+                            <p>Sender: Customer Name</p>
+                            <p>Date: MM/DD/YYYY</p>
+                        </div>
+                        <p>Message Content</p>
+                    </div>
+                    <!-- Repeat for other message threads -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('#mainContent > div').forEach(function (el) {
+                el.classList.add('hidden');
+            });
+            // Show the selected section
+            document.getElementById(sectionName + 'Section').classList.remove('hidden');
+        }
+    </script>
 </body>
+
 </html>
-
-
-{% endblock content %}

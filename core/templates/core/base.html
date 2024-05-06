@@ -1,73 +1,37 @@
 {% load menu %}
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>{% block title %}{% endblock title %} | mart</title>
-  </head>
-  <body>
-    <div
-      class="fixed inset-x-0 top-0 z-30 mx-auto w-full max-w-screen-md border border-gray-100 bg-white/80 py-3 shadow backdrop-blur-lg md:top-6 md:rounded-3xl lg:max-w-screen-lg"
-    >
-      <div class="px-4">
-        <div class="flex items-center justify-between">
-          <div class="flex shrink-0">
-            <a aria-current="page" class="flex items-center" href="/">
-              <img class="h-7 w-auto" src="" alt="" />
-              <p class="sr-only">Website Title</p>
-            </a>
-          </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %} | The 13th</title>
+    <meta name="author" content="David Grzyb">
+    <meta name="description" content="">
 
-          <div
-            class="hidden md:flex md:items-center md:justify-center md:gap-5"
-          >
-          <div class="relative">
-            <form action="/search/" method="get" class="hidden md:block">
-              <input type="text" name="query" placeholder="Search..." class="border p-2 rounded-md focus:outline-none focus:border-blue-500">
-              <button type="submit" class="ml-2 px-2 py-1 bg-blue-500 text-white rounded-md">Search</button>
-            </form>
-          </div>
-
-          <div class="relative">
-            <button id="dropdownButton" class="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900">
-                Categories
-            </button>
-            <div id="dropdownContent" class="absolute left-0 z-10 hidden w-44 bg-white shadow-lg">
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{% menu %}</a>
-                <!-- Add more categories as needed -->
-            </div>
-        </div>
-
-            <a
-              aria-current="page"
-              class="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
-              href="/"
-              >Products</a
-            >
-
-            <a
-            aria-current="page"
-            class=" flex inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
-            href="{% url "cart_view" %}"
-            >
-            {{cart | length}}
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-            </svg>
-
-           </a
-          >
-
-            <a
-              class="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
-              href=" {% url 'about' %}"
-              >about us</a
-            >
-          </div>
-          <div class="flex items-center justify-end gap-3">
-            {% if request.user.is_authenticated %}
+    <!-- Tailwind -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Karla:400,700&display=swap');
+        .font-family-karla { font-family: karla; }
+        .bg-sidebar { background: #3d68ff; }
+        .cta-btn { color: #3d68ff; }
+        .upgrade-btn { background: #1947ee; }
+        .upgrade-btn:hover { background: #0038fd; }
+        .active-nav-link { background: #1947ee; }
+        .nav-item:hover { background: #1947ee; }
+        .account-link:hover { background: #3d68ff; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container mx-auto px-40 py-3">
+            <div class="flex items-center justify-between">
+                <div class="hidden w-full text-gray-600 md:flex md:items-center">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16.2721 10.2721C16.2721 12.4813 14.4813 14.2721 12.2721 14.2721C10.063 14.2721 8.27214 12.4813 8.27214 10.2721C8.27214 8.06298 10.063 6.27212 12.2721 6.27212C14.4813 6.27212 16.2721 8.06298 16.2721 10.2721ZM14.2721 10.2721C14.2721 11.3767 13.3767 12.2721 12.2721 12.2721C11.1676 12.2721 10.2721 11.3767 10.2721 10.2721C10.2721 9.16755 11.1676 8.27212 12.2721 8.27212C13.3767 8.27212 14.2721 9.16755 14.2721 10.2721Z" fill="currentColor" /><path fill-rule="evenodd" clip-rule="evenodd" d="M5.79417 16.5183C2.19424 13.0909 2.05438 7.39409 5.48178 3.79417C8.90918 0.194243 14.6059 0.054383 18.2059 3.48178C21.8058 6.90918 21.9457 12.6059 18.5183 16.2059L12.3124 22.7241L5.79417 16.5183ZM17.0698 14.8268L12.243 19.8965L7.17324 15.0698C4.3733 12.404 4.26452 7.97318 6.93028 5.17324C9.59603 2.3733 14.0268 2.26452 16.8268 4.93028C19.6267 7.59603 19.7355 12.0268 17.0698 14.8268Z" fill="currentColor" />
+                    </svg>
+                    <span class="mx-1 text-sm">ZM</span>
+                    <span class="mx-1 text-sm">
+                        {% if request.user.is_authenticated %}
             <div class="relative">
               <img 
                 class="inline-block h-10 w-10 rounded-full ring-2 ring-white" 
@@ -76,7 +40,7 @@
                 id="userMenuButton" 
                 aria-haspopup="true" 
               />
-  
+
               <!-- Dropdown Menu -->
               <div class="absolute right-0 z-50 hidden mt-2 w-48 py-1 bg-white rounded-md shadow-lg" id="userMenu">
                 <a 
@@ -109,24 +73,63 @@
               >Login</a
             >
             {% endif %}
-          </div>
+                        </span>
+                </div>
+                <div class="w-full text-gray-700 md:text-center text-2xl font-semibold">
+                    The 13Th
+                </div>
+                <div class="flex items-center justify-end w-full">
+                    <a
+            aria-current="page"
+            class=" flex inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+            href="{% url "cart_view" %}"
+            >
+            {{cart | length}}
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+            </svg>
+
+           </a
+          >
+                </div>
+            </div>
+            <nav :class="isOpen ? '' : 'hidden'" class="sm:flex sm:justify-center sm:items-center mt-4">
+                <div class="flex flex-col sm:flex-row">
+                    <a class="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0" href="/">Home</a>
+                    <a class="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0" href="{% url "all-products" %}">Products</a>
+                    <div class="relative">
+                        <button id="dropdownButton" class="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0">Categories</button>
+                        <div id="dropdownContent" class="absolute left-0 z-10 hidden bg-white shadow-lg">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{% menu %}</a>
+                        </div>
+                    </div>
+                    <a class="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0" href="#">Contact</a>
+                    <a class="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0" href="{% url "about" %}">About</a>
+                </div>
+            </nav>
+            <form action="/search/" method="get" class="hidden md:block">
+            <div class="relative mt-6 max-w-lg mx-auto">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+           
+                <input type="text" name="query" class="w-full border rounded-md pl-10 pr-4 py-2 focus:border-blue-500 focus:outline-none focus:shadow-outline" type="text" placeholder="Search">
+                
+            </div>
+        </form>
         </div>
-      </div>
-    </div>
-    <div class="pt-40 flex">
+    </header>
+
         {% block content %} 
         {% endblock content %}</div>
-        <footer class="bg-gray-500 text-white mt-8 py-4">
-          <div class="max-w-screen-lg mx-auto px-4">
-            <div class="text-center">
-              <p>&copy; {{ current_year }} mart. All rights reserved.</p>
-              <p class="text-sm mt-2">
-                <a href="#" class="hover:underline">Privacy Policy</a> |
-                <a href="#" class="hover:underline">Terms of Service</a>
-              </p>
-            </div>
+        <footer class="bg-gray-200">
+          <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+              <a href="#" class="text-xl font-bold text-gray-500 hover:text-gray-400">Brand</a>
+              <p class="py-2 text-gray-500 sm:py-0">All rights reserved</p>
           </div>
-        </footer>
+      </footer>
 
         <script>
           document.getElementById('dropdownButton').addEventListener('click', function() {
