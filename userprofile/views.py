@@ -5,6 +5,8 @@ from django.shortcuts import redirect, render,get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+
+from store import models
 from . models import UserProfile
 from store.forms import ProductForm 
 from store.models import Product,OrderItem,Order
@@ -111,4 +113,10 @@ def orders(request):
     products = request.user.products.exclude(status=Product.DELETED)
     return render(request, 'userprofile/dashboard/orders.html',{'order_items':order_items,})
 
+# data to be displayed on the database
+def dashboard(request):
+    status_counts = Product.objects.values('status').annotate(count=models.Count('id'))
+    labels = [status['status'] for status in status_counts]
+    data = [status['count'] for status in status_counts]
+    return render(request, 'userprofile/dashboard/dashboard.html',{'labels': labels, 'data': data})
 

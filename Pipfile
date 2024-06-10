@@ -8,6 +8,8 @@ django = "*"
 pillow = "*"
 django-widget-tweaks = "*"
 django-phonenumber-field = "*"
+requests = "*"
+pyjwt = "*"
 
 [dev-packages]
 
