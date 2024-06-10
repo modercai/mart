@@ -1,20 +1,46 @@
 {% extends "core/base.html" %}
+{% load widget_tweaks %}
 
-{% block title %}Checkout{% endblock title %} 
+{% block title %}Checkout{% endblock title %}
 
 {% block content %}
-<div class>
-
+<div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                Checkout
+            </h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                Your total cost is: ZMW <span class="font-medium text-gray-800">{{ cart.get_total_cost }}</span>
+            </p>
+        </div>
+        <form method="post" action="{% url "payment" %}" class="space-y-6">
+            {% csrf_token %}
+            <div class="space-y-4">
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                    <div>
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            {{ field.label }}
+                        </label>
+                        <div class="mt-1">
+                            {{ field|add_class:"border-2 border-gray-300 p-2 w-full" }} 
+                        </div>
+                        {% if field.help_text %}
+                            <p class="mt-1 text-sm text-gray-500">{{ field.help_text }}</p>
+                        {% endif %}
+                        {% if field.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ field.errors }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div>
+                <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Checkout
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
-
-<h1 clsss="text-4xl">Checkout</h1>
-<h1 clsss="text-4xl">{{cart.get_total_cost}}</h1>
-
-<form method='post' action='.'>
-    {% csrf_token %}
-    {{form.as_p}}
-    <button class="mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
-        Checkout
-    </button>
-</form>
-{% endblock content%}
+{% endblock content %}

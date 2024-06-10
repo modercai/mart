@@ -124,7 +124,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
@@ -136,3 +135,8 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#payment gateway
+PAYMENT_GATEWAY_URL = 'https://checkout.sparco.io/gateway/api/v1/checkout'
+MERCHANT_SECRET_KEY = 'b0081c4460f547668fae4cc7a19ef572'
+MERCHANT_PUBLIC_KEY = '45da9b081b5845a9a3aa1ab4b86c5597'

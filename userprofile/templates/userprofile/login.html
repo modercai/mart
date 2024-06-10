@@ -19,7 +19,7 @@
       <!-- Input Fields with Labels and Errors -->
       <div class="flex flex-col">
         <label for="username" class="text-sm font-medium text-black">Username</label>
-        <input type="text" id="username" name="username" class="px-4 py-2 border border-gray-400 rounded-md focus:outline-none text-black">
+        <input type="text" id="username" name="username" class="px-4 py-2 border border-gray-400 rounded-md focus:outline-none text-black"/>
         {% for error in form.username.errors %}
         <p class="text-red-500 text-xs mt-1">{{ error }}</p>
         {% endfor %}

@@ -2,9 +2,9 @@
 
 {% block title %}My Products{% endblock title %}
 {% block content %}
-<section class="mb-8">
+<main class="w-full flex-grow p-6">
         
-    <div class="mt-5 flex flex-wrap justify-center">
+    <div class="h-full flex flex-wrap justify-center">
         {% if request.user.products.all %}
             {% for product in products %}
                 <div class="m-4 max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
@@ -38,5 +38,5 @@
             <h3 class="text-2xl">You currently don't have any products. Click the button at the top to add some products.</h3>
         {% endif %}
     </div>
-</section>
+</main>
 {% endblock content %}
