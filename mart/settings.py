@@ -25,10 +25,10 @@ SECRET_KEY = 'django-insecure-ibe%$h0ng3u2em&=23a5#wp+v26c@sw366p=+0bx5+5&0y@k1o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.vercel.app']
 
 CART_SESSION_ID = 'cart'
-SESSION_COOKIE_AGE = 8000
+SESSION_COOKIE_AGE = 80000
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'myaccount'
