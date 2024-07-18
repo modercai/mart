@@ -1,0 +1,97 @@
+{% extends "userprofile/dashboard/dashboard.html" %}
+
+{% load django_tables2 %}
+
+{% block content %}
+<div class="w-full h-screen overflow-x-hidden border-t flex flex-col">
+    <main class="w-full flex-grow p-6">
+        <h1 class="text-3xl text-black pb-6">Orders Content</h1>
+
+        <div class="w-full mt-6" x-data="{ openTab: 1 }">
+            <div class="flex flex-wrap justify-between border-b">
+                <ul class="flex mb-2">
+                    <li class="-mb-px mr-1" @click="openTab = 1">
+                        <a :class="openTab === 1 ? 'border-l border-t border-r rounded-t text-blue-700 font-semibold' : 'text-blue-500 hover:text-blue-800'"
+                            class="bg-white inline-block py-2 px-4 font-semibold" href="#">Pending</a>
+                    </li>
+                    <li class="mr-1" @click="openTab = 2">
+                        <a :class="openTab === 2 ? 'border-l border-t border-r rounded-t text-blue-700 font-semibold' : 'text-blue-500 hover:text-blue-800'"
+                            class="bg-white inline-block py-2 px-4 font-semibold" href="#">Shipped</a>
+                    </li>
+                    <li class="mr-1" @click="openTab = 3">
+                        <a :class="openTab === 3 ? 'border-l border-t border-r rounded-t text-blue-700 font-semibold' : 'text-blue-500 hover:text-blue-800'"
+                            class="bg-white inline-block py-2 px-4 font-semibold" href="#">Delivered</a>
+                    </li>
+                    <li class="mr-1" @click="openTab = 4">
+                        <a :class="openTab === 4 ? 'border-l border-t border-r rounded-t text-blue-700 font-semibold' : 'text-blue-500 hover:text-blue-800'"
+                            class="bg-white inline-block py-2 px-4 font-semibold" href="#">Cancelled</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="bg-white p-6">
+                <div id="" class="" x-show="openTab === 1">
+                    <section>
+                        <div id='recipients' class="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
+                            <table id="example" class="stripe hover" style="width:100%; padding-top: 1em; padding-bottom: 1em;">
+                                <thead>
+                                    <tr>
+                                        <th data-priority="1">Name</th>
+                                        <th data-priority="2">Position</th> 
+                                        <th data-priority="3">Office</th>
+                                        <th data-priority="4">Age</th>
+                                        <th data-priority="5">Start date</th>
+                                        <th data-priority="6">Salary</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Tiger Nixon</td>
+                                        <td>System Architect</td>
+                                        <td>Edinburgh</td>
+                                        <td>61</td>
+                                        <td>2011/04/25</td>
+                                        <td>$320,800</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Donna Snider</td>
+                                        <td>Customer Support</td>
+                                        <td>New York</td>
+                                        <td>27</td>
+                                        <td>2011/01/25</td>
+                                        <td>$112,000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+                <div id="" class="" x-show="openTab === 2">
+
+                </div>
+                <div id="" class="" x-show="openTab === 3">
+
+                </div>
+                <div id="" class="" x-show="openTab === 4">
+
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Include the required CSS and JS for DataTables -->
+<link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" rel="stylesheet">
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var table = $('#example').DataTable({
+            responsive: true
+        }).columns.adjust().responsive.recalc();
+    });
+</script>
+
+{% endblock content %}

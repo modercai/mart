@@ -48,6 +48,11 @@
         .font-family-karla {
             font-family: karla;
         }
+        
+        .active-nav-link {
+            background: #1947ee;
+        }
+        
 
              
     </style>  
@@ -64,34 +69,33 @@
             </a>
         </div>
         <nav class="text-white text-base font-semibold pt-3">
-            <a href="{% url "mystore" %}" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+            <a id="nav-dashboard" href="{% url "mystore" %}" class="flex items-center text-white py-4 pl-6 nav-item">
                 <i class="fas fa-tachometer-alt mr-3"></i>
                 Dashboard
             </a>
-            <a href="{% url "vendor-products" %}"
-                class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+            <a id="nav-products" href="{% url "vendor-products" %}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-sticky-note mr-3"></i>
                 My Products
             </a>
-            <a href="{% url "earnings" %}"
-                class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+            <a id="nav-earnings" href="{% url "earnings" %}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-table mr-3"></i>
                 Earnings
             </a>
-            <a href="{% url "orders" %}"
-                class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+            <a id="nav-orders" href="{% url "orders" %}" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-align-left mr-3"></i>
                 Orders
             </a>
-            <a href="#" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+            <a id="nav-notifications" href="#" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-tablet-alt mr-3"></i>
                 Notifications
             </a>
-            <a href="#" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+            <a id="nav-messages" href="#" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                 <i class="fas fa-calendar mr-3"></i>
                 Messages
             </a>
         </nav>
+        
+        
     </aside>
 
     <div class="w-full flex flex-col h-screen">
@@ -206,93 +210,13 @@
 
             <div>
 
-                <main class="w-full flex-grow p-6">
-                    <h1 class="text-3xl text-black pb-6">Orders Content</h1>
-
-                    <div class="w-full mt-6" x-data="{ openTab: 1 }">
-                        <div class="flex flex-wrap justify-between border-b">
-                            <ul class="flex mb-2">
-                                <li class="-mb-px mr-1" @click="openTab = 1">
-                                    <a :class="openTab === 1 ? 'border-l border-t border-r rounded-t text-blue-700 font-semibold' : 'text-blue-500 hover:text-blue-800'"
-                                        class="bg-white inline-block py-2 px-4 font-semibold" href="#">Pending</a>
-                                </li>
-                                <li class="mr-1" @click="openTab = 2">
-                                    <a :class="openTab === 2 ? 'border-l border-t border-r rounded-t text-blue-700 font-semibold' : 'text-blue-500 hover:text-blue-800'"
-                                        class="bg-white inline-block py-2 px-4 font-semibold" href="#">Shipped</a>
-                                </li>
-                                <li class="mr-1" @click="openTab = 3">
-                                    <a :class="openTab === 3 ? 'border-l border-t border-r rounded-t text-blue-700 font-semibold' : 'text-blue-500 hover:text-blue-800'"
-                                        class="bg-white inline-block py-2 px-4 font-semibold" href="#">Delivered</a>
-                                </li>
-                                <li class="mr-1" @click="openTab = 4">
-                                    <a :class="openTab === 4 ? 'border-l border-t border-r rounded-t text-blue-700 font-semibold' : 'text-blue-500 hover:text-blue-800'"
-                                        class="bg-white inline-block py-2 px-4 font-semibold" href="#">Cancelled</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6">
-                        <div id="" class="" x-show="openTab === 1">
-
-                            <section>
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Order ID</th>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Product Name</th>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Total Amount</th>
-                                            <th
-                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Quantity</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        {% for order_item in order_items  %}
-                                        <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap">{{order_item.order.id}}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap"><a
-                                                    href='{% url "mystore-order-detail" order_item.order.id %}'>{{order_item.product.title}}</a>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">ZK {{order_item.price}}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap">{{order_item.quantity}}</td>
-                                        </tr>
-                                        {% endfor %}
-                                        <!-- Add more order rows here -->
-                                    </tbody>
-                                </table>
-                            </section>
-
-                            <div id="" class="" x-show="openTab === 2">
-
-                            </div>
-                            <div id="" class="" x-show="openTab === 3">
-
-                            </div>
-                            <div id="" class="" x-show="openTab === 4">
-
-                            </div>
-                        </div>
-                    </div>
-
-                    {% endblock content %}
-
-                    <div>
-                        <footer class="w-full bg-white text-right p-4">
-                            <a target="_blank" href="#" class="underline">The 13th</a>.
-                        </footer>
-                    </div>
-                </main>
+        {% endblock  %}
 
             </div>
 
             <!-- AlpineJS -->
             <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+            
             <!-- Font Awesome -->
             <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"
                 integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
@@ -377,23 +301,27 @@
                     }
                 });
             </script>
+
             <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const navLinks = document.querySelectorAll('nav a');
-
-                    navLinks.forEach(link => {
-                        link.addEventListener('click', function (event) {
-                            // Remove active-nav-link class from all links
-                            navLinks.forEach(l => {
-                                l.classList.remove('active-nav-link');
-                            });
-
-                            // Add active-nav-link class to the clicked link
-                            this.classList.add('active-nav-link');
-                        });
-                    });
+                document.addEventListener('DOMContentLoaded', function() {
+                    var currentUrl = window.location.href;
+                    
+                    if (currentUrl.includes('/mystore')) {
+                        document.getElementById('nav-dashboard').classList.add('active-nav-link');
+                    } else if (currentUrl.includes('vendor_products')) {
+                        document.getElementById('nav_products').classList.add('active-nav-link');
+                    } else if (currentUrl.includes('earnings')) {
+                        document.getElementById('nav_earnings').classList.add('active-nav-link');
+                    } else if (currentUrl.includes('orders')) {
+                        document.getElementById('nav_orders').classList.add('active-nav-link');
+                    } else if (currentUrl.includes('notifications')) {
+                        document.getElementById('nav_notifications').classList.add('active-nav-link');
+                    } else if (currentUrl.includes('messages')) {
+                        document.getElementById('nav-messages').classList.add('active-nav-link');
+                    }
                 });
             </script>
+            
         </div>
     </div>
 </body>

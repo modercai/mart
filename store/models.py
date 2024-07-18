@@ -68,6 +68,16 @@ class Product(models.Model):
         return thumbnail
 
 class Order(models.Model):
+    PENDING = 'pending'
+    PROCESSED = 'in-transit'
+    DELIVERED = 'delivered'
+    
+    STATUS_CHOICES = (
+        (PENDING, 'Pending'),
+        (PROCESSED, 'in-transit'),
+        (DELIVERED, 'Delivered'),
+    )
+    
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
@@ -78,11 +88,16 @@ class Order(models.Model):
     merchant_id = models.CharField(max_length=255)
     created_by = models.ForeignKey(User, related_name='orders', on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    
-    
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default=PENDING)
+
+    def __str__(self):
+        return self.first_name
+        
 class OrderItem(models.Model):
     order = models.ForeignKey(Order,related_name='items',on_delete=models.CASCADE)
     product = models.ForeignKey(Product,related_name='items',on_delete=models.CASCADE)
     price = models.IntegerField()
     quantity = models.IntegerField(default=1)
+    
+    
     

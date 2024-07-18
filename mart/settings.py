@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +27,7 @@ SECRET_KEY = 'django-insecure-ibe%$h0ng3u2em&=23a5#wp+v26c@sw366p=+0bx5+5&0y@k1o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app']
+ALLOWED_HOSTS = ['*']
 
 CART_SESSION_ID = 'cart'
 SESSION_COOKIE_AGE = 80000
@@ -49,6 +51,7 @@ INSTALLED_APPS = [
     'core',
     'userprofile',
     'store',
+    'django_tables2',
 ]
 
 MIDDLEWARE = [
@@ -66,7 +69,7 @@ ROOT_URLCONF = 'mart.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -137,6 +140,5 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #payment gateway
-PAYMENT_GATEWAY_URL = 'https://checkout.sparco.io/gateway/api/v1/checkout'
-MERCHANT_SECRET_KEY = 'b0081c4460f547668fae4cc7a19ef572'
-MERCHANT_PUBLIC_KEY = '45da9b081b5845a9a3aa1ab4b86c5597'
+LENCO_SECRET_KEY = '993bed87f9d592566a6cce2cefd79363d1b7e95af3e1e6642b294ce5fc8c59f6'
+LENCO_PUBLIC_KEY = 'pub-88dd921c0ecd73590459a1dd5a9343c77db0f3c344f222b9'
