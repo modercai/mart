@@ -10,6 +10,7 @@ django-widget-tweaks = "*"
 django-phonenumber-field = "*"
 requests = "*"
 pyjwt = "*"
+django-tables2 = "*"
 
 [dev-packages]
 

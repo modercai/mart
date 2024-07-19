@@ -5,12 +5,16 @@ from django.shortcuts import redirect, render,get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-
+from django.core.paginator import Paginator
 from store import models
+from django.urls import reverse
 from . models import UserProfile
 from store.forms import ProductForm 
 from store.models import Product,OrderItem,Order
 from . forms import CustomUserCreationForm
+from .tables import OrderTable
+from django.db.models import Sum
+
 
 
 # Create your views here.
@@ -29,6 +33,33 @@ def mystore(request):
 def mystore_order_detail(request, pk):
     order = get_object_or_404(Order,pk=pk)
     return render(request, 'userprofile/mystore_order_detail.html',{'order':order,})
+
+def orders_view(request):
+    order_items = OrderItem.objects.all()
+    table = OrderTable(order_items)
+    print(table) 
+    return render(request, 'userprofile/dashboard/dashboard.html', {'table': table})
+
+#allow the vendor to change the order status of the item
+@login_required
+def update_order_status(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    if request.method == "POST":
+        status = request.POST.get("status")
+        order.status = status
+        order.save()
+        return redirect(reverse('orders'))
+    
+ #remove this if it doesnt work!!!   
+@login_required
+def total_price_all_order_items(request):
+    total_price = OrderItem.objects.aggregate(total_price=models.Sum('price'))['total_price']
+    return render(request, 'userprofile/dashboard/earnings.html', {'total_order_price': total_price})
+
+@login_required
+def total_price_delivered_orders(request):
+    total_price = Order.objects.filter(user=request.user, status='delivered').aggregate(total_price=models.Sum('total_price'))['total_price']
+    return render(request, 'userprofile/dashboard/earnings.html', {'total_earned_price': total_price})
     
 
 @login_required

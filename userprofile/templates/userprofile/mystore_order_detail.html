@@ -1,11 +1,56 @@
-{% extends "core/base.html" %}
+{% extends "userprofile/dashboard/dashboard.html" %}
 
-{% block title %}Order Detail - {{order.id}}{% endblock title %}
+{% block title %}Order Detail - {{ order.id }}{% endblock title %}
 
 {% block content %}
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl text-black mb-6">Order Detail - {{ order.id }}</h1>
+    
+    <div class="bg-white p-6 rounded shadow">
+        <h2 class="text-2xl mb-4">Order Information</h2>
+        <p><strong>Customer Name:</strong> {{ order.first_name }} {{ order.last_name }}</p>
+        <p><strong>Address:</strong> {{ order.address }}</p>
+        <p><strong>Town:</strong> {{ order.town }}</p>
+        <p><strong>Phone Number:</strong> {{ order.phone_number }}</p>
+        <p><strong>Total Amount:</strong> ZMW {{ order.paid_amount }}</p>
+        <p><strong>Status:</strong> {{ order.status }}</p>
+        
+        <h2 class="text-2xl mt-6 mb-4">Order Items</h2>
+        <table class="min-w-full bg-white">
+            <thead>
+                <tr>
+                    <th class="py-2">Product Name</th>
+                    <th class="py-2">Price</th>
+                    <th class="py-2">Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                {% if item.product.user == request.user %}
+                <tr>
+                    <td class="py-2">{{ item.product.title }}</td>
+                    <td class="py-2">ZMW {{ item.price }}</td>
+                    <td class="py-2">{{ item.quantity }}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
 
-{% for item in order.items.all %}
-{% if item.product.user == request.user %}
-{% endif %}
-{% endfor %}
+        {% if order.status != 'delivered' %}
+        <div class="mt-6">
+            <h2 class="text-2xl ">Update Order Status</h2>
+            <form method="post" action="{% url 'update_order_status' order.id %}">
+                {% csrf_token %}
+                <select name="status" class="block w-full p-2 border rounded mb-4">
+                    <option value="processed" {% if order.status == 'processed' %}selected{% endif %}>Processed</option>
+                    <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Shipped</option>
+                    <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Delivered</option>
+                </select>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Update</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
