@@ -73,42 +73,24 @@ def checkout(request):
             print('CART;;',cart)
             request.session['total_amount'] = total_price
             return redirect('paymentgateway')@login_required@login_required
-def paymentgateway(request):
-    total_amount = request.session.get('total_amount', 0)
-    context = {
-        'total_amount': total_amount,
-        'public_key': settings.LENCO_PUBLIC_KEY,
-        'user_email': request.user.email,
-        'reference': 'ref-' + str(uuid.uuid4()),
-    }
-    return render(request, 'store/paymentgateway.html', context)@login_required
-def paymentgateway(request):
-    total_amount = request.session.get('total_amount', 0)
-    context = {
-        'total_amount': total_amount,
-        'public_key': settings.LENCO_PUBLIC_KEY,
-        'user_email': request.user.email,
-        'reference': 'ref-' + str(uuid.uuid4()),
-    }
-    return render(request, 'store/paymentgateway.html', context)
-def paymentgateway(request):
-    total_amount = request.session.get('total_amount', 0)
-    context = {
-        'total_amount': total_amount,
-        'public_key': settings.LENCO_PUBLIC_KEY,
-        'user_email': request.user.email,
-        'reference': 'ref-' + str(uuid.uuid4()),
-    }
-    return render(request, 'store/paymentgateway.html', context)
     else:
         form = OrderForm()
     return render(request, 'store/paymentgateway.html',{
         'form':form,
         'cart':cart
     })
-    
-    
 
+@login_required
+def paymentgateway(request):
+    total_amount = request.session.get('total_amount', 0)
+    context = {
+        'total_amount': total_amount,
+        'public_key': settings.LENCO_PUBLIC_KEY,
+        'user_email': request.user.email,
+        'reference': 'ref-' + str(uuid.uuid4()),
+    }
+    return render(request, 'store/paymentgateway.html', context)
+    
 
 def delete_cart_item(request,product_id):
      cart = Cart(request)
