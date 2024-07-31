@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Gateway</title>
+    <script src="https://pay.sandbox.lenco.co/js/v1/inline.js"></script>
+</head>
+<body>
+    <h1>Payment Gateway</h1>
+
+    <!-- Directly render context variables in HTML -->
+    <p>Public Key: {{ public_key }}</p>
+    <p>Reference: {{ reference }}</p>
+    <p>User Email: {{ user_email }}</p>
+    <p>Total Amount: {{ total_amount }}</p>
+
+    <button onclick="getPaidWithLenco()">Pay Now</button>
+
+    <script>
+        function getPaidWithLenco() {
+            LencoPay.getPaid({
+                key: '{{ public_key }}',
+                reference: '{{ reference }}',
+                email: '{{ user_email }}',
+                amount: 10,
+                currency: "ZMW",
+                channels: ["card", "mobile-money"],
+                customer: {
+                    firstName: "Friday",
+                    lastName: "Malate",
+                    phone: "0972194844",
+                },
+                onSuccess: function (response) {
+                    const reference = response.reference;
+                    alert('Payment complete! Reference: ' + reference);
+                    // Make an AJAX call to your server with the reference to verify the payment
+                    $.ajax({
+                        url: '{% url "verify_payment" %}?reference=' + reference,
+                        method: 'get',
+                        success: function (response) {
+                            if (response.status) {
+                                alert('Payment verified successfully.');
+                                // Optionally redirect to another page
+                            } else {
+                                alert('Payment verification failed.');
+                            }
+                        }
+                    });
+                },
+                onClose: function () {
+                    alert('Payment was not completed, window closed.');
+                },
+                onConfirmationPending: function () {
+                    alert('Your purchase will be completed when the payment is confirmed');
+                },
+            });
+        }
+    </script>
+</body>
+</html>

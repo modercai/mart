@@ -17,14 +17,15 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
-from core.views import Home, about
+from core.views import all_products, home, about
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('all_products',all_products,name='all-products'),
     path('about/',about,name='about'),
     path('admin/', admin.site.urls),
     path('',include('userprofile.urls')),
     path('',include('store.urls')),
-    path('',Home, name="home"),
+    path('',home, name="home"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

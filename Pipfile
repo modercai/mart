@@ -4,10 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
+django = "==5.0.6"
 pillow = "*"
 django-widget-tweaks = "*"
 django-phonenumber-field = "*"
+requests = "*"
+pyjwt = "*"
+django-tables2 = "*"
 
 [dev-packages]
 

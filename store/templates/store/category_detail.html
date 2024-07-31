@@ -1,46 +1,65 @@
-{% extends "core/base.html" %}
 
+{% extends "core/base.html" %}
+{% load menu %}
 {% block title %}Categories{% endblock title %} 
 
 {% block content %}
-{% for product in products %}
-<div class="pl-20">
-    <div class="relative flex w-96 flex-col rounded-xl bg-gray-100 bg-clip-border text-gray-700 shadow-md">
-        <div class="relative mx-4 mt-4 h-96 overflow-hidden rounded-xl bg-white bg-clip-border text-gray-700">
-          
-          <img
-            src="{{product.get_thumbnail}}"
-            class="h-full w-full object-cover"
-            alt="{Image of product.title}"
-          />
-         
-        </div>
-        <div class="p-6">
-          <div class="mb-2 flex items-center justify-between">
-            <p class="block font-sans text-base font-medium leading-relaxed text-blue-gray-900 antialiased">
-              {{product.title}}
-            </p>
-            <p class="block font-sans text-base font-medium leading-relaxed text-blue-gray-900 antialiased">
-                K {{product.price}}
-            </p>
-          </div>
-          <p class="block font-sans text-sm font-normal leading-normal text-gray-700 antialiased opacity-75">
-            
-          </p>
-        </div>
-        <div class="p-6 pt-0">
-          <a href="{% url "product_detail" product.category.slug product.slug %}">
-            <button
-            class="block w-full select-none rounded-lg bg-gray-200 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-            type="button"
-          > 
-            Buy Now
-          </button>
-          </a>
-        </div>
-      </div>
-</div>
-{% endfor %}
- 
+<div class="mt-16 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row">
+  <div class="md:w-1/4 md:pr-8 mb-6 md:mb-0">
+    <!-- Filters -->
+    <h3 class="text-gray-600 text-lg font-medium mb-4">Filters</h3>
+    <!-- Example filter options, customize as needed -->
+    <h4>{%menu%}</h4>
+    <!-- Add more filters as needed -->
+    <div class="mb-4">
+      <label for="price_range" class="block text-sm font-medium text-gray-700">Price Range</label>
+      <select id="price_range" name="price_range" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        <option value="0-50">ZK1 - ZK50</option>
+        <option value="51-100">ZK51 - ZK100</option>
+        <option value="101-200">ZK101 - ZK</option>
+        <!-- Add more options as needed -->
+      </select>
+    </div>
+    <!-- Condition -->
+    <div class="mb-4">
+      <label for="condition" class="block text-sm font-medium text-gray-700">Condition</label>
+      <select id="condition" name="condition" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        <option value="new">New</option>
+        <option value="used">Used</option>
+      </select>
+    </div>
+    <!-- Price Range,  -->
+  </div>
 
+  <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
+      {% for product in products %}
+      <div class="w-full max-w-sm mx-auto rounded-md shadow-md overflow-hidden">
+          {% if product.image %}
+          <div class="flex items-end justify-end h-56 w-full bg-cover" style="background-image: url('{{ product.image.url }}')">
+            {% else %}
+            <div class="flex items-end justify-end h-56 w-full bg-cover" style="background-image: url('{{ product.get_thumbnail }}')">
+          {% endif %}
+              <button class="p-2 rounded-full bg-blue-600 text-white mx-5 -mb-4 hover:bg-blue-500 focus:outline-none focus:bg-blue-500">
+                  <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+              </button>
+          </div>
+          <div class="px-5 py-3">
+              <h3 class="text-gray-700 uppercase">{{ product.title }}</h3>
+              <span class="text-gray-500 mt-2">ZK {{ product.price }}</span>
+          </div>
+          <a href="{% url 'product_detail' product.category.slug product.slug %}">
+              <button
+                class="block w-full select-none rounded-md bg-gray-200 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                type="button"
+              >
+                Buy Now
+              </button>
+            </a>
+            
+      </div>
+      {% endfor %}  
+  </div>
+</div>
+  
+</div>
 {% endblock content %}
