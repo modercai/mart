@@ -15,8 +15,6 @@ from . forms import CustomUserCreationForm
 from .tables import OrderTable
 from django.db.models import Sum
 
-
-
 # Create your views here.
 
 def vendor_detail(request,pk):

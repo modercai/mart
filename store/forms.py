@@ -6,6 +6,25 @@ class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = ("first_name", "last_name", "address", "town", "phone_number")
+        widgets = {
+            'first_name': forms.TextInput(attrs={
+                'class': 'border rounded p-2 w-full'
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'border rounded p-2 w-full'
+            }),
+            'address': forms.TextInput(attrs={
+                'class': 'border rounded p-2 w-full'
+            })
+            ,
+            'town': forms.TextInput(attrs={
+                'class': 'border rounded p-2 w-full'
+            }),
+            'phone_number': forms.TextInput(attrs={
+                'class': 'border rounded p-2 w-full'
+            }),
+            
+        }
 
 class ProductForm(forms.ModelForm):
     class Meta:
