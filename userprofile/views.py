@@ -8,14 +8,15 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.paginator import Paginator
 from store import models
 from django.urls import reverse
+from django.core.paginator import Paginator
+from store import models
+from django.urls import reverse
 from . models import UserProfile
 from store.forms import ProductForm 
 from store.models import Product,OrderItem,Order
 from . forms import CustomUserCreationForm
 from .tables import OrderTable
 from django.db.models import Sum
-
-
 
 # Create your views here.
 

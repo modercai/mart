@@ -5,17 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Gateway</title>
     <script src="https://pay.sandbox.lenco.co/js/v1/inline.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Payment Gateway</h1>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
-    <!-- Directly render context variables in HTML -->
-    <p>Public Key: {{ public_key }}</p>
-    <p>Reference: {{ reference }}</p>
-    <p>User Email: {{ user_email }}</p>
-    <p>Total Amount: {{ total_amount }}</p>
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-4">Make Paym</h1>
 
-    <button onclick="getPaidWithLenco()">Pay Now</button>
+        <div class="mb-4">
+            <p class="text-gray-700"><strong>User Email:</strong> {{ user_email }}</p>
+            <p class="text-gray-700"><strong>Total Amount:</strong> {{ total_amount }}</p>
+        </div>
+
+        <button onclick="getPaidWithLenco()" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
+            Pay Now
+        </button>
+    </div>
 
     <script>
         function getPaidWithLenco() {
@@ -23,30 +28,33 @@
                 key: '{{ public_key }}',
                 reference: '{{ reference }}',
                 email: '{{ user_email }}',
-                amount: 10,
+                amount: '{{ total_amount }}',
                 currency: "ZMW",
                 channels: ["card", "mobile-money"],
                 customer: {
                     firstName: "Friday",
                     lastName: "Malate",
-                    phone: "0972194844",
+                    phone: "0971111111",
                 },
                 onSuccess: function (response) {
                     const reference = response.reference;
                     alert('Payment complete! Reference: ' + reference);
+                    
                     // Make an AJAX call to your server with the reference to verify the payment
-                    $.ajax({
-                        url: '{% url "verify_payment" %}?reference=' + reference,
-                        method: 'get',
-                        success: function (response) {
-                            if (response.status) {
+                    fetch('{% url "verify_payment" %}?reference=' + reference + '&order_id={{ order_id }}')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status) {
                                 alert('Payment verified successfully.');
-                                // Optionally redirect to another page
+                                // Redirect to the payment success page with the order ID
+                                window.location.href = '{% url "payment_success" %}?order_id={{ order_id }}';
                             } else {
                                 alert('Payment verification failed.');
+                                // Redirect to the payment error page
+                                window.location.href = '{% url "payment_error" %}';
                             }
-                        }
-                    });
+                        })
+                        .catch(error => console.error('Error:', error));
                 },
                 onClose: function () {
                     alert('Payment was not completed, window closed.');
@@ -57,5 +65,6 @@
             });
         }
     </script>
+    
 </body>
 </html>

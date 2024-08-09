@@ -82,7 +82,7 @@ class Order(models.Model):
     last_name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     town = models.CharField(max_length=255)
-    phone_number = models.IntegerField()
+    phone_number = models.CharField(max_length=20, null=False, blank=False)
     paid_amount = models.IntegerField(blank=True, null=True)
     is_paid = models.BooleanField(default=False)
     merchant_id = models.CharField(max_length=255)

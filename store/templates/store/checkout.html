@@ -1,61 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Gateway</title>
-    <script src="https://pay.sandbox.lenco.co/js/v1/inline.js"></script>
-</head>
-<body>
-    <h1>Payment Gateway</h1>
+{% extends "core/base.html" %}
 
-    <!-- Directly render context variables in HTML -->
-    <p>Public Key: {{ public_key }}</p>
-    <p>Reference: {{ reference }}</p>
-    <p>User Email: {{ user_email }}</p>
-    <p>Total Amount: {{ total_amount }}</p>
+{% block title %}Checkout{% endblock title %}
 
-    <button onclick="getPaidWithLenco()">Pay</button>
-
-    <script>
-        function getPaidWithLenco() {
-            LencoPay.getPaid({
-                key: '{{ public_key }}',
-                reference: '{{ reference }}',
-                email: '{{ user_email }}',
-                amount: 10,
-                currency: "ZMW",
-                channels: ["card", "mobile-money"],
-                customer: {
-                    firstName: "Friday",
-                    lastName: "Malate",
-                    phone: "0972194844",
-                },
-                onSuccess: function (response) {
-                    const reference = response.reference;
-                    alert('Payment complete! Reference: ' + reference);
-                    // Make an AJAX call to your server with the reference to verify the payment
-                    $.ajax({
-                        url: '{% url "verify_payment" %}?reference=' + reference,
-                        method: 'get',
-                        success: function (response) {
-                            if (response.status) {
-                                alert('Payment verified successfully.');
-                                // Optionally redirect to another page
-                            } else {
-                                alert('Payment verification failed.');
-                            }
-                        }
-                    });
-                },
-                onClose: function () {
-                    alert('Payment was not completed, window closed.');
-                },
-                onConfirmationPending: function () {
-                    alert('Your purchase will be completed when the payment is confirmed');
-                },
-            });
-        }
-    </script>
-</body>
-</html>
+{% block content %}
+<div class="container mx-auto p-4 max-w-md pb-10">
+    <div class="flex justify-center">
+    <h1 class="text-xl font-bold mb-4">Checkout</h1>
+    </div>
+    <div class="bg-white shadow-lg rounded-lg p-4">
+        <h2 class="text-lg font-semibold text-gray-800 mb-3">Total Cost: <span class="text-teal-500">{{ cart.get_total_cost }}</span></h2>
+        
+        <form method="post" action=".">
+            {% csrf_token %}
+            <div class="space-y-3">
+                {{ form.as_p }}
+            </div>
+            <div class="flex justify-center">
+                <button type="submit" class="mt-4 inline-block px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-md text-center font-medium">
+                    Proceed to Payment
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
