@@ -8,6 +8,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.paginator import Paginator
 from store import models
 from django.urls import reverse
+from django.core.paginator import Paginator
+from store import models
+from django.urls import reverse
 from . models import UserProfile
 from store.forms import ProductForm 
 from store.models import Product,OrderItem,Order
