@@ -142,3 +142,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #payment gateway
 LENCO_SECRET_KEY = '993bed87f9d592566a6cce2cefd79363d1b7e95af3e1e6642b294ce5fc8c59f6'
 LENCO_PUBLIC_KEY = 'pub-88dd921c0ecd73590459a1dd5a9343c77db0f3c344f222b9'
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = "587"
+EMAIL_HOST_USER = "malatefriday12@gmail.com"
+EMAIL_HOST_PASSWORD = "vsxa djhd xlro rvpa"
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+DEFAULT_FROM_EMAIL = 'the13@mart.com'
+

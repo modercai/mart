@@ -125,7 +125,29 @@ def webhook(request):
 @login_required
 def payment_success(request):
     order_id = request.GET.get('order_id')
-    order = Order.objects.get(id=order_id, created_by=request.user)
+    order = get_object_or_404(Order, id=order_id, created_by=request.user)
+       # Update the order status to is_paid=True
+    order.is_paid = True
+    order.save()
+    
+    # Send email to the buyer
+    send_mail(
+        subject='Your Order is Confirmed!',
+        message=f'Thank you for your purchase. Your order with ID {order.id} has been successfully paid.',
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[request.user.email],
+        fail_silently=False,
+    )
+    
+    # Send email to the seller
+    send_mail(
+        subject='New Order Received!',
+        message=f'A new order with ID {order.id} has been placed and paid by {request.user.email}.',
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=['kamulimalate73@gmail.com'],  
+        fail_silently=False,
+    )
+    
     context = {
         'order': order,
         'order_items': order.items.all()  

@@ -1,12 +1,20 @@
 <!-- store/payment_success.html -->
-<h2>Payment Successful!</h2>
-
-<p>Thank you for your purchase. Here are the details of your order:</p>
-
-<ul>
-    {% for item in order_items %}
-    <li>{{ item.product.name }} - Quantity: {{ item.quantity }} - Price: {{ item.price }}</li>
-    {% endfor %}
-</ul>
-
-<p>Total Amount Paid: {{ order.paid_amount }}</p>
+<div style="max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; font-family: Arial, sans-serif; color: #333;">
+    <h2 style="color: #28a745; font-size: 2em; margin-bottom: 20px;">Payment Successful!</h2>
+    
+    <p style="font-size: 1.2em; margin-bottom: 30px;">Thank you for your purchase. Here are the details of your order:</p>
+    
+    <ul style="list-style-type: none; padding: 0; margin-bottom: 30px;">
+        {% for item in order_items %}
+        <li style="border-bottom: 1px solid #ddd; padding: 10px 0;">
+            <strong>{{ item.product.title }}</strong> <br>
+            Quantity: {{ item.quantity }} <br>
+            Price: {{ item.price }}
+        </li>
+        {% endfor %}
+    </ul>
+    
+    <p style="font-size: 1.5em; font-weight: bold; margin-bottom: 30px;">Total Amount Paid: {{ order.paid_amount }}</p>
+    
+    <a href="/" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; font-size: 1.2em;">Go to Home</a>
+</div>
