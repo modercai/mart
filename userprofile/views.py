@@ -46,7 +46,7 @@ def orders_view(request):
 def update_order_status(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     if request.method == "POST":
-        status = request.POST.get("status")
+        status = request.POST.get("status")  
         order.status = status
         order.save()
         return redirect(reverse('orders'))
