@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shipping Instructions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            text-align: center;
+        }
+        .details {
+            margin-top: 20px;
+        }
+        .address {
+            margin-top: 20px;
+        }
+        .items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .items th, .items td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Shipping Instructions</h1>
+        <p>Order ID: {{ order.id }}</p>
+    </div>
+
+    <div class="details">
+        <h2>From:</h2>
+        <p>{{ seller_name }}</p>
+        <p>{{ seller_address }}</p>
+    </div>
+
+    <div class="address">
+        <h2>To:</h2>
+        <p>{{ order.created_by.username }}</p>
+        <p>{{ order.shipping_address }}</p>
+    </div>
+
+    <table class="items">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order_items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+               
+    </table>
+</body>
+</html>
