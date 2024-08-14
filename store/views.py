@@ -18,6 +18,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django.http import HttpResponse,HttpResponseRedirect
 from django.urls import reverse
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from weasyprint import HTML
+from django.conf import settings
+from django.utils.html import strip_tags
+import os
 
 
 # Create your views here.
@@ -122,15 +128,58 @@ def webhook(request):
             return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'failure'})
 
+
+
 @login_required
 def payment_success(request):
     order_id = request.GET.get('order_id')
-    order = Order.objects.get(id=order_id, created_by=request.user)
+    order = get_object_or_404(Order, id=order_id, created_by=request.user)
+    
+    # Update the order status to is_paid=True
+    order.is_paid = True
+    order.save()
+    
+    # Generate the PDF invoice
+    invoice_html = render_to_string('store/invoice/invoice.html', {'order': order, 'order_items': order.items.all()})
+    pdf_file = HTML(string=invoice_html).write_pdf()
+    
+    # Create email content
+    subject = 'Your Order is Confirmed!'
+    html_content = render_to_string('store/invoice/buyer_order_confirmation.html', {'order': order})
+    text_content = strip_tags(html_content)  # Fallback for email clients that don't support HTML
+    
+    # Send email to the buyer
+    email = EmailMultiAlternatives(
+        subject=subject,
+        body=text_content,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[request.user.email]
+    )
+    email.attach_alternative(html_content, "text/html")
+    email.attach(f"invoice_{order.id}.pdf", pdf_file, 'application/pdf')
+    email.send()
+    
+    # Send email to the seller
+    seller_subject = 'New Order Received!'
+    seller_html_content = render_to_string('store/invoice/seller_new_order.html', {'order': order})
+    seller_text_content = strip_tags(seller_html_content)
+    
+    seller_email = EmailMultiAlternatives(
+        subject=seller_subject,
+        body=seller_text_content,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=['kamulimalate73@gmail.com']
+    )
+    seller_email.attach_alternative(seller_html_content, "text/html")
+    seller_email.attach(f"invoice_{order.id}.pdf", pdf_file, 'application/pdf')
+    seller_email.send()
+    
     context = {
         'order': order,
         'order_items': order.items.all()  
     }
     return render(request, 'store/payment_success.html', context)
+
 
 def payment_error(request):
     return render(request, 'store/payment_error.html')

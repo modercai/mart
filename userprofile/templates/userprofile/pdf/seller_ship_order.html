@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Shipment Request</title>
+    <style>
+        /* Add your custom branding styles here */
+        .email-body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .header {
+            background-color: #ffc107;
+            color: black;
+            padding: 10px;
+            text-align: center;
+        }
+        .content {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Order Shipment Request</h1>
+    </div>
+    <div class="email-body">
+        <div class="content">
+            <p>Hello,</p>
+            <p>Please ship the items for order ID <strong>{{ order.id }}</strong> as soon as possible.</p>
+            <p>The shipping instructions and address details are attached in the PDF.</p>
+            <p>Thank you for your prompt attention!</p>
+        </div>
+    </div>
+</body>
+</html>

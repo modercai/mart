@@ -1,17 +1,117 @@
 {% extends "core/base.html" %}
-
 {% block title %}My Account{% endblock title %}
 
-
 {% block content %}
+<html>
+  <body>
+    <div class="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden" style='font-family: "Work Sans", "Noto Sans", sans-serif;'>
+      <div class="layout-container flex h-full grow flex-col">
+        <div class="px-40 flex flex-1 justify-center py-5">
+          <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+            <div class="flex p-4 @container">
+              <div class="flex w-full flex-col gap-4 @[520px]:items-center">
+                <div class="flex justify-center space-x-10">
+                  <div
+                    class="bg-center bg-no-repeat aspect-square bg-cover rounded-full min-h-32 w-32"
+                    style='background-image: url("");'
+                  ></div>
+                  <div class="flex flex-col justify-center">
+                    <p class="text-[#0e141b] text-[22px] font-bold leading-tight tracking-[-0.015em]">{{user.get_username}}</p>
+                    <p class="text-[#4e7397] text-base font-normal leading-normal">{{request.user.email}}</p>
+                  </div>
+                  <div class='flex flex-col space-x-20'>
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class='bg-red-400 p-2 ron text-white'>Logout</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-<div class='flex flex-col space-x-20'>
-    <h1>My Account</h1>
-    <form action="{% url 'logout' %}" method="post">
-        {% csrf_token %}
-        <button type="submit" class='bg-red-400 p-5 text-white'>Logout</button>
-    </form>
-</div>
+            <h3 class="flex items-center justify-center text-[#0e141b] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Account Details</h3>
 
+            <div class="flex items-center gap-2 bg-slate-50 px-2 min-h-[72px] py-2 justify-around">
+              <div class="flex flex-col justify-center">
+                <p class="text-[#0e141b] text-base font-medium leading-normal line-clamp-1">Email</p>
+                <p class="text-[#4e7397] text-sm font-normal leading-normal line-clamp-2">{{request.user.email}}</p>
+              </div>
+              <div class="shrink-0">
+                <button
+                  class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-3 bg-[#e7edf3] text-[#0e141b] text-sm font-medium leading-normal w-fit"
+                >
+                  <span class="truncate">Change</span>
+                </button>
+              </div>
+            </div>
 
+            <div class="flex items-center gap-2 bg-slate-50 px-2 min-h-[72px] py-2 justify-around">
+              <div class="flex flex-col justify-center">
+                <p class="text-[#0e141b] text-base font-medium leading-normal line-clamp-1">Phone Number</p>
+                <p class="text-[#4e7397] text-sm font-normal leading-normal line-clamp-2">{{request.user.phone_number}}</p>
+              </div>
+              <div class="shrink-0">
+                <button
+                  class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-3 bg-[#e7edf3] text-[#0e141b] text-sm font-medium leading-normal w-fit"
+                >
+                  <span class="truncate">Change</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 bg-slate-50 px-2 min-h-[72px] py-2 justify-around">
+              <div class="flex flex-col justify-center">
+                <p class="text-[#0e141b] text-base font-medium leading-normal line-clamp-1">NRC</p>
+                <p class="text-[#4e7397] text-sm font-normal leading-normal line-clamp-2">{{request.user.reg_number}}</p>
+              </div>
+              <div class="shrink-0">
+                <button
+                  class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-3 bg-[#e7edf3] text-[#0e141b] text-sm font-medium leading-normal w-fit"
+                >
+                  <span class="truncate">Change</span>
+                </button>
+              </div>
+            </div>
+
+            <h3 class="flex items-center justify-center text-[#0e141b] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Location</h3>
+
+            <div class="flex items-center gap-2 bg-slate-50 px-2 min-h-[72px] py-2 justify-around">
+              <div class="flex flex-col justify-center">
+                <p class="text-[#0e141b] text-base font-medium leading-normal line-clamp-1">Town</p>
+                <p class="text-[#4e7397] text-sm font-normal leading-normal line-clamp-2">{{request.user.town}}</p>
+              </div>
+              <div class="shrink-0">
+                <button
+                  class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-3 bg-[#e7edf3] text-[#0e141b] text-sm font-medium leading-normal w-fit"
+                >
+                  <span class="truncate">Change</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 bg-slate-50 px-2 min-h-[72px] py-2 justify-around">
+              <div class="flex flex-col justify-center">
+                <p class="text-[#0e141b] text-base font-medium leading-normal line-clamp-1">Zip</p>
+                <p class="text-[#4e7397] text-sm font-normal leading-normal line-clamp-2">94107</p>
+              </div>
+              <div class="shrink-0">
+                <button
+                  class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-3 bg-[#e7edf3] text-[#0e141b] text-sm font-medium leading-normal w-fit"
+                >
+                  <span class="truncate">Change</span>
+                </button>
+              </div>
+            </div>
+
+            <a href="{% url "instructions" %}"
+              class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-3 bg-[#e7edf3] text-[#0e141b] text-sm font-bold leading-normal tracking-[0.015em]"
+            >
+              <span class="truncate">Apply to be a vendor</span>
+        </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
 {% endblock content %}

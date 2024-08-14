@@ -35,13 +35,7 @@
                     <span class="mx-1 text-sm">
                         {% if request.user.is_authenticated %}
             <div class="relative">
-              <img 
-                class="inline-block h-10 w-10 rounded-full ring-2 ring-white" 
-                src="https://pxbar.com/wp-content/uploads/2023/09/instagram-profile-picture.jpg" 
-                alt="User Menu"
-                id="userMenuButton" 
-                aria-haspopup="true" 
-              />
+              <a id='userMenuButton'class="text-blue-500">Hai, {{ user.get_username }}</a>
 
               <!-- Dropdown Menu -->
               <div class="absolute right-0 z-50 hidden mt-2 w-48 py-1 bg-white rounded-md shadow-lg" id="userMenu">
@@ -68,7 +62,6 @@
               href="{% url 'signup'  %}"
               >Sign in</a
             >
-            
             <a
               class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
               href="{% url 'login'  %}"
@@ -83,7 +76,7 @@
                 <div class="flex items-center justify-end w-full">
                     <a
             aria-current="page"
-            class=" flex inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+            class="flex inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
             href="{% url "cart_view" %}"
             >
             {{cart | length}}

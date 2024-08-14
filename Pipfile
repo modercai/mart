@@ -11,6 +11,7 @@ django-phonenumber-field = "*"
 requests = "*"
 pyjwt = "*"
 django-tables2 = "*"
+weasyprint = "*"
 
 [dev-packages]
 

@@ -17,6 +17,12 @@ from store.models import Product,OrderItem,Order
 from . forms import CustomUserCreationForm
 from .tables import OrderTable
 from django.db.models import Sum
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from weasyprint import HTML
+from django.conf import settings
+from django.utils.html import strip_tags
+import os
 
 # Create your views here.
 
@@ -37,19 +43,69 @@ def mystore_order_detail(request, pk):
 
 def orders_view(request):
     order_items = OrderItem.objects.all()
-    table = OrderTable(order_items)
-    print(table) 
+    table = OrderTable(order_items) 
     return render(request, 'userprofile/dashboard/dashboard.html', {'table': table})
 
 #allow the vendor to change the order status of the item
 @login_required
 def update_order_status(request, order_id):
     order = get_object_or_404(Order, id=order_id)
+    
     if request.method == "POST":
         status = request.POST.get("status")
         order.status = status
         order.save()
+        
+        # Query the order items
+        order_items = order.items.all()  # Retrieve the related items
+
+        # Send email to the buyer about the status update
+        subject = f"Your Order Status Has Been Updated to {status.title()}"
+        html_content = render_to_string('userprofile/pdf/order_status_update.html', {'order': order})
+        text_content = strip_tags(html_content)
+        
+        email = EmailMultiAlternatives(
+            subject=subject,
+            body=text_content,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[order.created_by.email]
+        )
+        email.attach_alternative(html_content, "text/html")
+        email.send()
+        
+        if status == 'shipped':
+            seller_name = "Your Seller Name"
+            seller_address = "Seller Address Here"
+            
+            pdf_html = render_to_string('userprofile/pdf/shipping_instructions.html', {
+                'order': order,
+                'seller_name': seller_name,
+                'seller_address': seller_address,
+                'order_items': order_items,  # Pass the items to the template
+            })
+            pdf_file = HTML(string=pdf_html).write_pdf()
+            
+            seller_subject = f"Order ID {order.id} - Please Ship the Items"
+            seller_html_content = render_to_string('userprofile/pdf/seller_ship_order.html', {'order': order})
+            seller_text_content = strip_tags(seller_html_content)
+            
+            seller_email = EmailMultiAlternatives(
+                subject=seller_subject,
+                body=seller_text_content,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=['kamulimalate73@gmail.com']
+            )
+            seller_email.attach_alternative(seller_html_content, "text/html")
+            seller_email.attach(f"shipping_instructions_{order.id}.pdf", pdf_file, 'application/pdf')
+            seller_email.send()
+        
         return redirect(reverse('orders'))
+
+    context = {
+        'order': order,
+    }
+    return render(request, 'userprofile/pdf/order_status_update.html', context)
+
     
  #remove this if it doesnt work!!!   
 @login_required
@@ -129,6 +185,9 @@ def signup(request):
 def myaccount(request):
     return render(request,'userprofile/myaccount.html')
 
+@login_required
+def seller_instructions(request):
+    return render(request,'userprofile/seller_instructions.html')
 
 @login_required
 def vendor_products(request):

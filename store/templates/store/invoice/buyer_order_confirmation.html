@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Order is Confirmed!</title>
+    <style>
+        /* Add your custom branding styles here */
+        .email-body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .content {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Thank you for your purchase!</h1>
+    </div>
+    <div class="email-body">
+        <div class="content">
+            <p>Dear {{ order.created_by.username }},</p>
+            <p>Your order with ID <strong>{{ order.id }}</strong> has been successfully paid.</p>
+            <p>Please find your invoice attached.</p>
+            <p>Thank you for shopping with us!</p>
+        </div>
+    </div>
+</body>
+</html>

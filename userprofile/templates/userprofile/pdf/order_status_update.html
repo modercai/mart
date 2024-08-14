@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Status Update</title>
+    <style>
+        /* Add your custom branding styles here */
+        .email-body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .header {
+            background-color: #17a2b8;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .content {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Your Order Status Has Been Updated!</h1>
+    </div>
+    <div class="email-body">
+        <div class="content">
+            <p>Dear {{ order.created_by.username }},</p>
+            <p>We wanted to let you know that your order with ID <strong>{{ order.id }}</strong> is now <strong>{{ order.status }}</strong>.</p>
+            {% if order.status == 'shipped' %}
+            <p>Your order has been shipped and is on its way!</p>
+            {% elif order.status == 'delivered' %}
+            <p>Your order has been delivered. We hope you enjoy your purchase!</p>
+            {% endif %}
+            <p>Thank you for shopping with us!</p>
+        </div>
+    </div>
+</body>
+</html>
