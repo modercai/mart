@@ -7,6 +7,7 @@ urlpatterns = [
     path('logout/',auth_views.LogoutView.as_view(),name='logout'),
     path('login/',auth_views.LoginView.as_view(template_name='userprofile/login.html'),name='login'),
     path('myaccount/',views.myaccount,name='myaccount'),
+    path('seller_instructions',views.seller_instructions,name='instructions'),
     path('mystore/',views.mystore,name='mystore'),
     path('mystore/mystore_order_detail/<int:pk>',views.mystore_order_detail,name="mystore-order-detail"),
     path('mystore/vendor_products',views.vendor_products,name='vendor-products'),

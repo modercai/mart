@@ -1,0 +1,96 @@
+{% extends "core/base.html" %}
+{% block title %}Instructions{% endblock title %}
+
+{% block content %}
+<html>
+  <body>
+    <div class="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root">
+      <div class="layout-container flex h-full grow flex-col">
+        <div class="p-40 flex flex-1 justify-center py-5">
+          <div class="layout-content-container flex flex-col flex-1">
+            <div class="@container">
+              <div class="@[480px]:p-4">
+                <div class="flex flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-start justify-end px-4 pb-40 @[480px]:px-10"
+     style='background-image: linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%), url("https://cdn.usegalileo.ai/stability/a90cb9fe-8cdc-46f5-97a0-b9c69f1366fd.png"); background-size: cover; background-position: center;'
+>
+
+                  <div class="flex flex-col gap-2 text-left">
+                    <h1
+                      class="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]"
+                    >
+                      Start selling in 3 steps
+                    </h1>
+                    <h2 class="text-white text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal">
+                      We'll walk you through creating your first listing. It should take about 10 minutes to complete.
+                    </h2>
+                  </div>
+                  <label class="flex flex-col min-w-40 h-14 w-full max-w-[480px] @[480px]:h-16">
+                    <div class="flex w-full flex-1 items-stretch rounded-xl h-full">
+                      <p
+                        class="text-4xl form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 bg-slate-50 focus:border-[#cedbe8] h-full placeholder:text-[#49719c] px-[15px] rounded-r-none border-r-0 pr-2 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal"
+                      >
+                      Make Money Selling On the 13th
+                    </p>
+                      <div class="flex items-center justify-center rounded-r-xl bg-slate-50 pr-[7px]">
+                        <a
+                          class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 @[480px]:h-12 @[480px]:px-5 bg-red-400 text-slate-50 text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em]"
+                        >
+                          <span class="truncate text-white">Start Selling</span>
+                      </a>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <h2 class="text-[#0d141c] text-[22px] font-bold leading-tight tracking-tight px-4 pb-3 pt-5">Learn the basics</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 p-4">
+              <div class="flex flex-col gap-3 rounded-lg border border-[#cedbe8] bg-white p-4 shadow-lg hover:shadow-xl transition-shadow">
+                <div class="text-[#0d141c]">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M144,48V208a8,8,0,0,1-16,0V62.13L100.12,78.86a8,8,0,1,1-8.24-13.72l40-24A8,8,0,0,1,144,48Z"></path>
+                  </svg>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <h2 class="text-[#0d141c] text-base font-bold leading-tight">Create a listing</h2>
+                  <p class="text-[#49719c] text-sm font-normal leading-normal">
+                    Add a title, description, and photos for your item. You can also add features like size, color, and material.
+                  </p>
+                </div>
+              </div>
+              <div class="flex flex-col gap-3 rounded-lg border border-[#cedbe8] bg-white p-4 shadow-lg hover:shadow-xl transition-shadow">
+                <div class="text-[#0d141c]">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M176,208a8,8,0,0,1-8,8H88a8,8,0,0,1-6.4-12.8l71.94-95.92a32,32,0,1,0-51.1-38.53,32.5,32.5,0,0,0-3.78,6.46A8,8,0,1,1,84,68.8a48,48,0,1,1,82.33,48.09L104,200h64A8,8,0,0,1,176,208Z"></path>
+                  </svg>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <h2 class="text-[#0d141c] text-base font-bold leading-tight">Set up payments</h2>
+                  <p class="text-[#49719c] text-sm font-normal leading-normal">
+                    Choose how you'd like to get paid. You can accept Mobile Money and Debit cards.
+                  </p>
+                </div>
+              </div>
+              <div class="flex flex-col gap-3 rounded-lg border border-[#cedbe8] bg-white p-4 shadow-lg hover:shadow-xl transition-shadow">
+                <div class="text-[#0d141c]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50" fill="currentColor">
+                        <text x="10" y="40" font-family="Arial, sans-serif" font-size="40" fill="currentColor">3</text>
+                      </svg>
+                      
+                </div>
+                <div class="flex flex-col gap-1">
+                  <h2 class="text-[#0d141c] text-base font-bold leading-tight">Ship your items</h2>
+                  <p class="text-[#49719c] text-sm font-normal leading-normal">
+                    Decide how you want to ship your item. You can print shipping labels.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+       
+      </div>
+    </div>
+  </body>
+</html>
+{% endblock content %}

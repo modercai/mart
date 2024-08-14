@@ -37,8 +37,7 @@ def mystore_order_detail(request, pk):
 
 def orders_view(request):
     order_items = OrderItem.objects.all()
-    table = OrderTable(order_items)
-    print(table) 
+    table = OrderTable(order_items) 
     return render(request, 'userprofile/dashboard/dashboard.html', {'table': table})
 
 #allow the vendor to change the order status of the item
@@ -129,6 +128,9 @@ def signup(request):
 def myaccount(request):
     return render(request,'userprofile/myaccount.html')
 
+@login_required
+def seller_instructions(request):
+    return render(request,'userprofile/seller_instructions.html')
 
 @login_required
 def vendor_products(request):

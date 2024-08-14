@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Order Received!</title>
+    <style>
+        /* Add your custom branding styles here */
+        .email-body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .header {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .content {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>New Order Received!</h1>
+    </div>
+    <div class="email-body">
+        <div class="content">
+            <p>Hello,</p>
+            <p>A new order with ID <strong>{{ order.id }}</strong> has been placed and paid by {{ order.created_by.email }}.</p>
+            <p>Please find the invoice attached.</p>
+        </div>
+    </div>
+</body>
+</html>
