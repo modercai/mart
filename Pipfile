@@ -12,6 +12,7 @@ requests = "*"
 pyjwt = "*"
 django-tables2 = "*"
 weasyprint = "*"
+psycopg = "*"
 
 [dev-packages]
 
