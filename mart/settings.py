@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-ibe%$h0ng3u2em&=23a5#wp+v26c@sw366p=+0bx5+5&0y@k1o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['.vercel.app','now.sh','127.0.0.1','localhost']
+ALLOWED_HOSTS = ['.vercel.app','now.sh','127.0.0.1','localhost','https://mart-aia9.onrender.com']
 
 CART_SESSION_ID = 'cart'
 SESSION_COOKIE_AGE = 80000
