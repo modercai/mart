@@ -26,9 +26,10 @@ import os
 
 # Create your views here.
 
-def vendor_detail(request,pk):
-    user = User.objects.get(pk=pk)
-    return render(request,'userprofile/vendor_detail.html',{'user':user})
+def vendor_detail(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    products = user.products.all()  # Get all products for the user
+    return render(request, 'userprofile/vendor_detail.html', {'user': user, 'products': products})
 
 @login_required
 def mystore(request):
