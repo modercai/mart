@@ -1,41 +1,129 @@
 {% extends "core/base.html" %}
 
-{% block title %}{% firstof user.get_full_name user.username %}{% endblock title %}
+{% block title %}{% firstof user.get_full_name user.username %}'s Products{% endblock title %}
 
 {% block content %}
-    
-<div class="h-full flex flex-wrap justify-center">
-    {% if request.user.products.all %}
-        {% for product in products %}
-            <div class="m-4 max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
-                <div class="relative flex flex-col rounded-xl bg-gray-100 bg-clip-border text-gray-700 shadow-md">
-                    <div class="relative h-72 overflow-hidden rounded-t-xl bg-white bg-clip-border text-gray-700">
+<div class="bg-gray-50 min-h-screen py-12">
+    <div class="container mx-auto px-4">
+        <div class="mb-12 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+                {% firstof user.get_full_name user.username %}'s Collection
+            </h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Explore the unique products curated by this talented seller. Each item tells a story of creativity and craftsmanship.
+            </p>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% for product in products %}
+                <div class="group">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:-translate-y-2">
                         {% if product.image %}
-                            <img src="{{ product.image.url }}" class="h-full w-full object-cover" alt="{{ product.title }}" />
+                            <div class="h-64 bg-cover bg-center relative overflow-hidden">
+                                <img 
+                                    src="{{ product.image.url }}" 
+                                    alt="{{ product.title }}" 
+                                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                                >
+                                {% if product.discount %}
+                                    <span class="absolute top-4 left-4 bg-red-500 text-white text-xs px-3 py-1 rounded-full">
+                                        -{{ product.discount }}%
+                                    </span>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="h-64 bg-gray-200 flex items-center justify-center">
+                                <span class="text-gray-500">No Image</span>
+                            </div>
                         {% endif %}
-                    </div>
-                    <div class="p-6">
-                        <div class="mb-2 flex items-center justify-between">
-                            <p class="block font-sans text-base font-medium leading-relaxed text-blue-gray-900 antialiased">
-                                {{ product.title }}
-                            </p>
-                            <p class="block font-sans text-base font-medium leading-relaxed text-blue-gray-900 antialiased">
-                                ZK {{ product.price }}
-                            </p>
+
+                        <div class="p-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="font-semibold text-gray-800 text-lg truncate max-w-[70%]">
+                                    {{ product.title }}
+                                </h3>
+                                <div class="flex items-center space-x-2">
+                                    {% if product.discount %}
+                                        <span class="text-gray-500 line-through text-sm">
+                                            ZK {{ product.original_price }}
+                                        </span>
+                                    {% endif %}
+                                    <span class="text-blue-600 font-bold">
+                                        ZK {{ product.price }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center text-yellow-500">
+                                    {% for i in product.rating %}
+                                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z" />
+                                        </svg>
+                                    {% endfor %}
+                                    <span class="text-gray-600 text-sm ml-2">({{ product.review_count }})</span> <!--TODO: HAVE REVIEWS AND RATINGS FOR THE PRODUCTS-->
+                                </div>
+                                <a 
+                                    href="{% url 'product_detail' product.category.slug product.slug %}"
+                                    class="bg-gray-200 text-gray-800 px-3 py-1.5 rounded-md text-sm hover:bg-gray-300 transition"
+                                >
+                                    View Details
+                                </a>
+                            </div>
                         </div>
                     </div>
-                    <div class="p-6 pt-0">
-                        <a href="{% url 'product_detail' product.category.slug product.slug %}">
-                            <button class="block w-full select-none rounded-md bg-gray-200 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
-                              Buy Now
-                            </button>
-                          </a>
-                    </div>
                 </div>
+            {% empty %}
+                <div class="col-span-full text-center py-12">
+                    <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h2 class="mt-4 text-2xl font-semibold text-gray-600">No Products Yet</h2>
+                    <p class="mt-2 text-gray-500">This seller hasn't listed any products at the moment.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+            <div class="flex justify-center mt-12">
+                <nav class="inline-flex rounded-md shadow">
+                    {% if page_obj.has_previous %}
+                        <a 
+                            href="?page={{ page_obj.previous_page_number }}" 
+                            class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-l-md text-gray-700 bg-white hover:bg-gray-50"
+                        >
+                            Previous
+                        </a>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <span class="px-4 py-2 border border-gray-300 bg-blue-50 text-blue-600 text-sm font-medium">
+                                {{ num }}
+                            </span>
+                        {% else %}
+                            <a 
+                                href="?page={{ num }}" 
+                                class="px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                            >
+                                {{ num }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <a 
+                            href="?page={{ page_obj.next_page_number }}" 
+                            class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-white hover:bg-gray-50"
+                        >
+                            Next
+                        </a>
+                    {% endif %}
+                </nav>
             </div>
-        {% endfor %}
-    {% else %}
-        <h3 class="text-2xl">You currently don't have any products. Click the button at the top to add some products.</h3>
-    {% endif %}
+        {% endif %}
+    </div>
 </div>
 {% endblock content %}

@@ -1,198 +1,244 @@
 {% load menu %}
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock title %} | The 13th</title>
-    <meta name="author" content="David Grzyb">
-    <meta name="description" content="">
+    <meta name="author" content="Your Company">
+    <meta name="description" content="Your e-commerce platform for unique products">
 
+    <!-- External Scripts -->
     <script src="https://developer.tingg.africa/checkout/v2/tingg-checkout.js"></script>
-
-    <!-- Tailwind -->
+    
+    <!-- Tailwind CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    
+    <!-- Alpine.js for interactivity -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    <!-- Custom Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
     <style>
-        @import url('https://fonts.googleapis.com/css?family=Karla:400,700&display=swap');
-        .font-family-karla { font-family: karla; }
-        .bg-sidebar { background: #3d68ff; }
-        .cta-btn { color: #3d68ff; }
-        .upgrade-btn { background: #1947ee; }
-        .upgrade-btn:hover { background: #0038fd; }
-        .active-nav-link { background: #1947ee; }
-        .nav-item:hover { background: #1947ee; }
-        .account-link:hover { background: #3d68ff; }
+        :root {
+            --primary-color: #3d68ff;
+            --secondary-color: #1947ee;
+        }
+        body {
+            font-family: 'Karla', sans-serif;
+        }
+        .nav-hover {
+            transition: all 0.3s ease;
+        }
+        .nav-hover:hover {
+            transform: translateY(-2px);
+            color: var(--primary-color);
+        }
     </style>
 </head>
-<body>
-    <header>
-        <div class="container mx-auto px-40 py-3">
-            <div class="flex items-center justify-between">
-                <div class="hidden w-full text-gray-600 md:flex md:items-center">
-                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16.2721 10.2721C16.2721 12.4813 14.4813 14.2721 12.2721 14.2721C10.063 14.2721 8.27214 12.4813 8.27214 10.2721C8.27214 8.06298 10.063 6.27212 12.2721 6.27212C14.4813 6.27212 16.2721 8.06298 16.2721 10.2721ZM14.2721 10.2721C14.2721 11.3767 13.3767 12.2721 12.2721 12.2721C11.1676 12.2721 10.2721 11.3767 10.2721 10.2721C10.2721 9.16755 11.1676 8.27212 12.2721 8.27212C13.3767 8.27212 14.2721 9.16755 14.2721 10.2721Z" fill="currentColor" /><path fill-rule="evenodd" clip-rule="evenodd" d="M5.79417 16.5183C2.19424 13.0909 2.05438 7.39409 5.48178 3.79417C8.90918 0.194243 14.6059 0.054383 18.2059 3.48178C21.8058 6.90918 21.9457 12.6059 18.5183 16.2059L12.3124 22.7241L5.79417 16.5183ZM17.0698 14.8268L12.243 19.8965L7.17324 15.0698C4.3733 12.404 4.26452 7.97318 6.93028 5.17324C9.59603 2.3733 14.0268 2.26452 16.8268 4.93028C19.6267 7.59603 19.7355 12.0268 17.0698 14.8268Z" fill="currentColor" />
+<body class="bg-gray-50 text-gray-900 antialiased">
+    <!-- Modern Header -->
+    <header x-data="{ isOpen: false }" class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <!-- Top Bar -->
+            <div class="flex items-center justify-between mb-4">
+                <!-- Location & User Section -->
+                <div class="flex items-center space-x-3">
+                    <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16.2721 10.2721C16.2721 12.4813 14.4813 14.2721 12.2721 14.2721C10.063 14.2721 8.27214 12.4813 8.27214 10.2721C8.27214 8.06298 10.063 6.27212 12.2721 6.27212C14.4813 6.27212 16.2721 8.06298 16.2721 10.2721ZM14.2721 10.2721C14.2721 11.3767 13.3767 12.2721 12.2721 12.2721C11.1676 12.2721 10.2721 11.3767 10.2721 10.2721C10.2721 9.16755 11.1676 8.27212 12.2721 8.27212C13.3767 8.27212 14.2721 9.16755 14.2721 10.2721Z" fill="currentColor" />
                     </svg>
-                    <span class="mx-1 text-sm">ZM</span>
-                    <span class="mx-1 text-sm">
-                        {% if request.user.is_authenticated %}
-            <div class="relative">
-              <a id='userMenuButton'class="text-blue-500">Hai, {{ user.get_username }}</a>
+                    <span class="text-sm text-gray-600">ZM</span>
+                </div>
 
-              <!-- Dropdown Menu -->
-              <div class="absolute right-0 z-50 hidden mt-2 w-48 py-1 bg-white rounded-md shadow-lg" id="userMenu">
-                <a 
-                  href="{% url 'myaccount' %}" 
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  My Account
-                </a>
-                {% if request.user.userprofile.is_vendor %}
-                <a 
-                  href="{% url 'mystore' %}" 
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  My Store
-                </a>
-                {% endif %}
-              </div>
-            </div>
+                <!-- Brand Name -->
+                <div class="text-2xl font-bold text-gray-800 tracking-wider">
+                    The 13th
+                </div>
 
-        {% else %}
-            <a
-              class="hidden items-center justify-center rounded-xl bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 transition-all duration-150 hover:bg-gray-50 sm:inline-flex"
-              href="{% url 'signup'  %}"
-              >Sign in</a
-            >
-            <a
-              class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-              href="{% url 'login'  %}"
-              >Login</a
-            >
-            {% endif %}
+                <!-- Cart & User Actions -->
+                <div class="flex items-center space-x-4">
+                    <!-- Cart -->
+                    <a href="{% url 'cart_view' %}" class="relative nav-hover">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                            {{cart|length}}
                         </span>
-                </div>
-                <div class="w-full text-gray-700 md:text-center text-2xl font-semibold">
-                    The 13Th
-                </div>
-                <div class="flex items-center justify-end w-full">
-                    <a
-            aria-current="page"
-            class="flex inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
-            href="{% url "cart_view" %}"
-            >
-            {{cart | length}}
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-            </svg>
+                    </a>
 
-           </a
-          >
+                    <!-- User Authentication -->
+                    {% if request.user.is_authenticated %}
+                        <div x-data="{ open: false }" class="relative">
+                            <button @click="open = !open" class="flex items-center text-sm text-gray-700 hover:text-blue-600">
+                                <span>Hi, {{ user.get_username }}</span>
+                                <svg class="h-4 w-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            
+                            <div 
+                                x-show="open" 
+                                @click.away="open = false"
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 scale-95"
+                                x-transition:enter-end="opacity-100 scale-100"
+                                x-transition:leave="transition ease-in duration-75"
+                                x-transition:leave-start="opacity-100 scale-100"
+                                x-transition:leave-end="opacity-0 scale-95"
+                                class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20"
+                            >
+                                <a href="{% url 'myaccount' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Account</a>
+                                {% if request.user.userprofile.is_vendor %}
+                                <a href="{% url 'mystore' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Store</a>
+                                {% endif %}
+                                <a href="{% url 'logout' %}" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Logout</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="space-x-2">
+                            <a href="{% url 'signup' %}" class="text-sm text-gray-600 hover:text-blue-600">Sign Up</a>
+                            <a href="{% url 'login' %}" class="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Login</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
-            <nav :class="isOpen ? '' : 'hidden'" class="sm:flex sm:justify-center sm:items-center mt-4">
-                <div class="flex flex-col sm:flex-row">
-                    <a class="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0" href="/">Home</a>
-                    <a class="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0" href="{% url "all-products" %}">Products</a>
-                    <div class="relative">
-                        <button id="dropdownButton" class="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0">Categories</button>
-                        <div id="dropdownContent" class="absolute left-0 z-10 hidden bg-white shadow-lg">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{% menu %}</a>
+
+            <!-- Navigation -->
+            <nav class="relative">
+                <div class="flex justify-center items-center space-x-6">
+                    <a href="/" class="nav-hover text-gray-700">Home</a>
+                    <a href="{% url 'all-products' %}" class="nav-hover text-gray-700">Products</a>
+                    
+                    <!-- Dropdown Categories -->
+                    <div x-data="{ open: false }" class="relative">
+                        <button 
+                            @mouseenter="open = true" 
+                            @mouseleave="open = false"
+                            class="nav-hover text-gray-700 flex items-center"
+                        >
+                            Categories
+                            <svg class="h-4 w-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        
+                        <div 
+                            x-show="open"
+                            x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0 translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 translate-y-1"
+                            class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20"
+                        >
+                            {% menu %}
                         </div>
                     </div>
-                    <a class="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0" href="#">Contact</a>
-                    <a class="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0" href="{% url "about" %}">About</a>
+                    
+                    <a href="#" class="nav-hover text-gray-700">Contact</a>
+                    <a href="{% url 'about' %}" class="nav-hover text-gray-700">About</a>
                 </div>
             </nav>
-            <form action="/search/" method="get" class="hidden md:block">
-            <div class="relative mt-6 max-w-lg mx-auto">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center">
-                <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none">
-                    <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </span>
-           
-                <input type="text" name="query" class="w-full border rounded-md pl-10 pr-4 py-2 focus:border-blue-500 focus:outline-none focus:shadow-outline" type="text" placeholder="Search">
-                
-            </div>
-        </form>
+
+            <!-- Search Bar -->
+            <form action="/search/" method="get" class="mt-4">
+                <div class="relative max-w-md mx-auto">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </span>
+                    <input 
+                        type="text" 
+                        name="query" 
+                        placeholder="Search products, categories..." 
+                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                </div>
+            </form>
         </div>
     </header>
 
-        {% block content %} 
-        {% endblock content %}</div>
-        <footer class="flex flex-col gap-6 px-5 py-10 text-center @container">
-          <div class="flex flex-wrap items-center justify-center gap-6 @[480px]:flex-row @[480px]:justify-around">
-            <a class="text-[#4e7397] text-base font-normal leading-normal min-w-40" href="#">About Us</a>
-            <a class="text-[#4e7397] text-base font-normal leading-normal min-w-40" href="#">FAQs</a>
-            <a class="text-[#4e7397] text-base font-normal leading-normal min-w-40" href="#">Return Policy</a>
-            <a class="text-[#4e7397] text-base font-normal leading-normal min-w-40" href="#">Customer Service</a>
-            <a class="text-[#4e7397] text-base font-normal leading-normal min-w-40" href="#">Privacy Policy</a>
-          </div>
-          <div class="flex flex-wrap justify-center gap-4">
-            <a href="#">
-              <div class="text-[#4e7397]" data-icon="FacebookLogo" data-size="24px" data-weight="regular">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                  <path
-                    d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm8,191.63V152h24a8,8,0,0,0,0-16H136V112a16,16,0,0,1,16-16h16a8,8,0,0,0,0-16H152a32,32,0,0,0-32,32v24H96a8,8,0,0,0,0,16h24v63.63a88,88,0,1,1,16,0Z"
-                  ></path>
-                </svg>
-              </div>
-            </a>
-            <a href="#">
-              <div class="text-[#4e7397]" data-icon="TwitterLogo" data-size="24px" data-weight="regular">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                  <path
-                    d="M247.39,68.94A8,8,0,0,0,240,64H209.57A48.66,48.66,0,0,0,168.1,40a46.91,46.91,0,0,0-33.75,13.7A47.9,47.9,0,0,0,120,88v6.09C79.74,83.47,46.81,50.72,46.46,50.37a8,8,0,0,0-13.65,4.92c-4.31,47.79,9.57,79.77,22,98.18a110.93,110.93,0,0,0,21.88,24.2c-15.23,17.53-39.21,26.74-39.47,26.84a8,8,0,0,0-3.85,11.93c.75,1.12,3.75,5.05,11.08,8.72C53.51,229.7,65.48,232,80,232c70.67,0,129.72-54.42,135.75-124.44l29.91-29.9A8,8,0,0,0,247.39,68.94Zm-45,29.41a8,8,0,0,0-2.32,5.14C196,166.58,143.28,216,80,216c-10.56,0-18-1.4-23.22-3.08,11.51-6.25,27.56-17,37.88-32.48A8,8,0,0,0,92,169.08c-.47-.27-43.91-26.34-44-96,16,13,45.25,33.17,78.67,38.79A8,8,0,0,0,136,104V88a32,32,0,0,1,9.6-22.92A30.94,30.94,0,0,1,167.9,56c12.66.16,24.49,7.88,29.44,19.21A8,8,0,0,0,204.67,80h16Z"
-                  ></path>
-                </svg>
-              </div>
-            </a>
-            <a href="#">
-              <div class="text-[#4e7397]" data-icon="InstagramLogo" data-size="24px" data-weight="regular">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                  <path
-                    d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160ZM176,24H80A56.06,56.06,0,0,0,24,80v96a56.06,56.06,0,0,0,56,56h96a56.06,56.06,0,0,0,56-56V80A56.06,56.06,0,0,0,176,24Zm40,152a40,40,0,0,1-40,40H80a40,40,0,0,1-40-40V80A40,40,0,0,1,80,40h96a40,40,0,0,1,40,40ZM192,76a12,12,0,1,1-12-12A12,12,0,0,1,192,76Z"
-                  ></path>
-                </svg>
-              </div>
-            </a>
-            <a href="#">
-              <div class="text-[#4e7397]" data-icon="PinterestLogo" data-size="24px" data-weight="regular">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                  <path
-                    d="M216,112c0,22.57-7.9,43.2-22.23,58.11C180.39,184,162.25,192,144,192c-17.88,0-29.82-5.86-37.43-12L95.79,225.83A8,8,0,0,1,88,232a8.24,8.24,0,0,1-1.84-.21,8,8,0,0,1-6-9.62l32-136a8,8,0,0,1,15.58,3.66l-16.9,71.8C114,166,123.3,176,144,176c27.53,0,56-23.94,56-64A72,72,0,1,0,65.63,148a8,8,0,0,1-13.85,8A88,88,0,1,1,216,112Z"
-                  ></path>
-                </svg>
-              </div>
-            </a>
-          </div>
-          <p class="text-[#4e7397] text-base font-normal leading-normal">
-            © <span id="currentYear"></span>, All rights reserved
-          </p>
-        </footer>
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock content %}
+    </main>
 
-        <script>
-          document.getElementById('dropdownButton').addEventListener('click', function() {
-              var dropdownContent = document.getElementById('dropdownContent');
-              if (dropdownContent.classList.contains('hidden')) {
-                  dropdownContent.classList.remove('hidden');
-              } else {
-                  dropdownContent.classList.add('hidden');
-              }
-          });
-      </script>
-      <script>
-        document.getElementById("currentYear").textContent = new Date().getFullYear();
-      </script>
-      <script>
-        // Dropdown Menu script
-        document.getElementById('userMenuButton').addEventListener('click', function() {
-          var userMenu = document.getElementById('userMenu');
-          if (userMenu.classList.contains('hidden')) {
-            userMenu.classList.remove('hidden');
-          } else {
-            userMenu.classList.add('hidden');
-          }
-        });
-      </script>
-  </body>
+    <!-- Modern Footer with Social Media and Additional Links -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4 grid md:grid-cols-4 gap-8">
+            <div>
+                <h4 class="text-xl font-bold mb-4">The 13th</h4>
+                <p class="text-gray-400">Your premium online marketplace for unique and quality products.</p>
+                <div class="flex space-x-4 mt-4">
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.948-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div>
+                <h5 class="text-lg font-semibold mb-4">Shop</h5>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'all-products' %}" class="text-gray-400 hover:text-white">All Products</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white">New Arrivals</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white">Best Sellers</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h5 class="text-lg font-semibold mb-4">Support</h5>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-400 hover:text-white">Help Center</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white">Shipping Information</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white">Returns & Exchanges</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h5 class="text-lg font-semibold mb-4">Contact</h5>
+                <ul class="space-y-2">
+                    <li class="text-gray-400">+260 123 456 789</li>
+                    <li class="text-gray-400">support@the13th.com</li>
+                    <li class="text-gray-400">Lusaka, Zambia</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="border-t border-gray-800 mt-8 py-4 text-center">
+            <p class="text-sm text-gray-500">
+                &copy; {{ current_year }} The 13th. All Rights Reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Optional: Back to Top Button -->
+    <button 
+        x-data="{ scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }) } }"
+        @click="scrollToTop()"
+        class="fixed bottom-6 right-6 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition hidden md:block"
+    >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+</body>
 </html>
+```

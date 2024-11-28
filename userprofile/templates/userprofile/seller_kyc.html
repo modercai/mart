@@ -1,0 +1,42 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="max-w-lg mx-auto pb-10 bg-white shadow-lg rounded-lg mt-10 px-8 py-6">
+    <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">KYC Document Submission</h1>
+    <form method="POST" enctype="multipart/form-data" action="{% url 'kyc-submit' %}" class="space-y-6">
+        {% csrf_token %}
+
+        <!-- Seller Information -->
+        <div class="space-y-4">
+            <h2 class="text-xl font-semibold text-gray-700">Seller Information</h2>
+            <div>
+                <label for="full_name" class="block text-sm font-medium text-gray-600">Full Name</label>
+                <input type="text" id="full_name" name="full_name" class="block w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+            </div>
+
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-600">Email</label>
+                <input type="email" id="email" name="email" class="block w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+            </div>
+        </div>
+
+        <!-- KYC Document Upload -->
+        <div class="space-y-4">
+            <h2 class="text-xl font-semibold text-gray-700">Upload KYC Documents</h2>
+            <div>
+                <label for="id_document" class="block text-sm font-medium text-gray-600">NRC Document (PDF, PNG, JPG)</label>
+                <input type="file" id="id_document" name="id_document" class="block w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" accept=".pdf,.png,.jpg" required>
+            </div>
+            <div>
+                <label for="address_proof" class="block text-sm font-medium text-gray-600">Proof of Address (PDF, PNG, JPG)</label>
+                <input type="file" id="address_proof" name="address_proof" class="block w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" accept=".pdf,.png,.jpg" required>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Submit KYC Documents</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -90,18 +90,25 @@ WSGI_APPLICATION = 'mart.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#   'default': {
+#     'ENGINE': 'django.db.backends.postgresql',
+#     'NAME': 'mart',
+#     'USER': 'mart_owner',
+#     'PASSWORD': 'HxODJpv32sKz',
+#     'HOST': 'ep-tiny-boat-a58s6ehn.us-east-2.aws.neon.tech',
+#     'PORT': 5432,
+#     'OPTIONS': {
+#       'sslmode': 'require',
+#     },
+#   }
+# }
+
 DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.postgresql',
-    'NAME': 'mart',
-    'USER': 'mart_owner',
-    'PASSWORD': 'HxODJpv32sKz',
-    'HOST': 'ep-tiny-boat-a58s6ehn.us-east-2.aws.neon.tech',
-    'PORT': 5432,
-    'OPTIONS': {
-      'sslmode': 'require',
-    },
-  }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 
@@ -170,4 +177,29 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
 DEFAULT_FROM_EMAIL = 'the13@mart.com'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        '': {  # Root logger
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    },
+}
 

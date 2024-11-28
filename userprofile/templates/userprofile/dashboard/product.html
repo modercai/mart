@@ -2,8 +2,9 @@
 
 {% block title %}My Products{% endblock title %}
 {% block content %}
+<div class="w-full h-screen overflow-x-hidden border-t flex flex-col">
 <main class="w-full flex-grow p-6">
-        
+    
     <div class="h-full flex flex-wrap justify-center">
         {% if request.user.products.all %}
             {% for product in products %}
@@ -39,4 +40,5 @@
         {% endif %}
     </div>
 </main>
+</div>
 {% endblock content %}

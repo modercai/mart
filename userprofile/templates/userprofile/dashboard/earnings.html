@@ -1,83 +1,75 @@
 {% extends "userprofile/dashboard/dashboard.html" %}
 
-
 {% block content %}
-
 <div class="w-full overflow-x-hidden border-t flex flex-col">
     <main class="w-full flex-grow p-6">
-        <div class="flex justify-evenly mb-8">
-            <!-- Blue Card for Pending Payments  added some more changes-->
-            <div class="bg-blue-500 rounded-lg shadow-md p-4 text-white">
-                <p class="text-lg font-semibold">Orders Income</p>
-                <p class="text-xl">{{ total_order_price }}</p>
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-blue-500 rounded-lg shadow-xl p-6 text-white">
+                <div class="flex flex-col">
+                    <p class="text-lg font-semibold mb-2">Total Earnings</p>
+                    <p class="text-3xl font-bold">ZMW {{ total_earnings|floatformat:2 }}</p>
+                    <p class="text-sm mt-2">From {{ total_orders }} completed orders</p>
+                </div>
             </div>
-            <!-- Yellow Card for Earned Cash -->
-            <div class="bg-yellow-500 rounded-lg shadow-md p-4 text-white">
-                <p class="text-lg font-semibold">Earned Cash</p>
-                <p class="text-xl">{{ total_earned_price }}</p>
+            
+            <div class="bg-green-500 rounded-lg shadow-xl p-6 text-white">
+                <div class="flex flex-col">
+                    <p class="text-lg font-semibold mb-2">Available Balance</p>
+                    <p class="text-3xl font-bold">ZMW {{ available_balance|floatformat:2 }}</p>
+                    <p class="text-sm mt-2">Ready for withdrawal</p>
+                </div>
+            </div>
+
+            <div class="bg-purple-500 rounded-lg shadow-xl p-6 text-white">
+                <div class="flex flex-col">
+                    <p class="text-lg font-semibold mb-2">Pending Withdrawals</p>
+                    <p class="text-3xl font-bold">ZMW {{ pending_withdrawals|floatformat:2 }}</p>
+                    <p class="text-sm mt-2">Under processing</p>
+                </div>
             </div>
         </div>
 
-        <div class="bg-white p-6">
-            <div id="" class="" x-show="openTab === 1">
-                <section>
-                    <div id='recipients' class="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
-                        <table id="example" class="stripe hover" style="width:100%; padding-top: 1em; padding-bottom: 1em;">
-                            <thead>
-                                <tr>
-                                    <th data-priority="1">Name</th>
-                                    <th data-priority="2">Position</th> 
-                                    <th data-priority="3">Office</th>
-                                    <th data-priority="4">Age</th>
-                                    <th data-priority="5">Start date</th>
-                                    <th data-priority="6">Salary</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Tiger Nixon</td>
-                                    <td>System Architect</td>
-                                    <td>Edinburgh</td>
-                                    <td>61</td>
-                                    <td>2011/04/25</td>
-                                    <td>$320,800</td>
-                                </tr>
-                                <tr>
-                                    <td>Donna Snider</td>
-                                    <td>Customer Support</td>
-                                    <td>New York</td>
-                                    <td>27</td>
-                                    <td>2011/01/25</td>
-                                    <td>$112,000</td>
-                                </tr>
-                            </tbody>
-                        </table>
+        <!-- Withdrawal Form -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Request Withdrawal</h2>
+            <form method="post" action="{% url 'request_withdrawal' %}" class="space-y-4">
+                {% csrf_token %}
+                <div class="flex flex-col space-y-2">
+                    <label for="amount" class="text-gray-700">Withdrawal Amount</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2 text-gray-600">ZMW</span>
+                        <input 
+                            type="number" 
+                            name="amount" 
+                            id="amount"
+                            min="100"
+                            max="{{ available_balance|floatformat:2 }}" 
+                            step="0.01" 
+                            placeholder="0.00" 
+                            class="pl-12 w-full border border-gray-300 p-2 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            required
+                        >
                     </div>
-                </section>
-            </div>
-            <div id="" class="" x-show="openTab === 2">
+                    <p class="text-sm text-gray-500">Minimum withdrawal: ZMW 100.00</p>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <p class="text-sm {% if message.tags %}text-{{ message.tags }}{% endif %}">{{ message }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <button 
+                    type="submit" 
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md transition duration-200 
+                           {% if available_balance < 100 %}opacity-50 cursor-not-allowed{% endif %}"
+                    {% if available_balance < 100 %}disabled{% endif %}
+                >
+                    Request Withdrawal
+                </button>
+            </form>
+        </div>
 
-            </div>
-            <div id="" class="" x-show="openTab === 3">
-
-            </div>
-            <div id="" class="" x-show="openTab === 4">
-
-            </div>
-        </div>        
+        <!-- Rest of the template remains the same -->
     </main>
-    <!-- Include the required CSS and JS for DataTables -->
-<link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" rel="stylesheet">
-
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
-<script>
-    $(document).ready(function() {
-        var table = $('#example').DataTable({
-            responsive: true
-        }).columns.adjust().responsive.recalc();
-    });
-</script>
+</div>
 {% endblock content %}
