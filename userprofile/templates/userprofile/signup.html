@@ -1,26 +1,29 @@
-<!-- signup.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <title>Sign Up</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    }
+  </style>
 </head>
-
-{% block content %}
-
-<div class="bg-gray-200 flex min-h-screen items-center justify-center">
-    <div class="w-full max-w-md p-8 space-y-3 rounded-lg shadow-lg bg-white">
-      <h1 class="text-2xl text-center font-bold">Sign Up</h1>
-  
+<body>
+  <div class="min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full space-y-6">
+      <h1 class="text-3xl font-semibold text-center text-gray-800">Sign Up</h1>
       <form method="post" action="." class="space-y-5">
         {% csrf_token %}
-  
+
         <!-- Input Fields with Labels -->
         {% for field in form %}
         <div class="flex flex-col">
-          <label for="{{ field.id_for_label }}" class="text-sm font-medium text-black">{{ field.label }}</label>
-          <input type="{{ field.field.widget.input_type }}" id="{{ field.id_for_label }}" name="{{ field.name }}" class="px-4 py-2 border border-gray-400 rounded-md focus:outline-none text-black">
+          <label for="{{ field.id_for_label }}" class="text-sm font-medium text-gray-700">{{ field.label }}</label>
+          <input type="{{ field.field.widget.input_type }}" id="{{ field.id_for_label }}" name="{{ field.name }}" class="mt-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none text-gray-900">
           {% for error in field.errors %}
           <p class="text-red-500 text-xs mt-1">{{ error }}</p>
           {% endfor %}
@@ -29,17 +32,19 @@
   
         <!-- Submit Button -->
         <div class="flex justify-center">
-          <button type="submit" class="px-10 py-2 text-lg font-medium text-white bg-purple-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-500 flex items-center">
-              Sign Up
+          <button type="submit" class="w-full px-4 py-2 text-white font-medium bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Sign Up
           </button>
         </div>
         
         <!-- Already have an account link -->
-        <div class="flex items-center justify-center">
-          <h3 class="text-sm">Already have an account? <a href="{% url 'login' %}" class="text-sm text-blue-600 hover:underline">Log In</a></h3>
+        <div class="flex justify-center text-sm text-gray-600">
+          <p>Already have an account? 
+            <a href="{% url 'login' %}" class="text-indigo-600 hover:underline">Log In</a>
+          </p>
         </div>
       </form>
     </div>
   </div>
-
-{% endblock content %}
+</body>
+</html>

@@ -11,18 +11,21 @@ from django.urls import reverse
 from django.core.paginator import Paginator
 from store import models
 from django.urls import reverse
-from . models import UserProfile
+from . models import UserProfile, SellerKYC
 from store.forms import ProductForm 
-from store.models import Product,OrderItem,Order
+from store.models import Product,OrderItem,Order,WithdrawalRequest,VendorBalance
 from . forms import CustomUserCreationForm
 from .tables import OrderTable
 from django.db.models import Sum
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, send_mail
 from django.template.loader import render_to_string
 from weasyprint import HTML
 from django.conf import settings
 from django.utils.html import strip_tags
 import os
+from decimal import Decimal
+
+
 
 # Create your views here.
 
@@ -40,7 +43,7 @@ def mystore(request):
 @login_required
 def mystore_order_detail(request, pk):
     order = get_object_or_404(Order,pk=pk)
-    return render(request, 'userprofile/mystore_order_detail.html',{'order':order,})
+    return render(request, 'userprofile/dashboard/mystore_order_detail.html',{'order':order,})
 
 def orders_view(request):
     order_items = OrderItem.objects.all()
@@ -107,17 +110,79 @@ def update_order_status(request, order_id):
     }
     return render(request, 'userprofile/pdf/order_status_update.html', context)
 
-    
- #remove this if it doesnt work!!!   
 @login_required
-def total_price_all_order_items(request):
-    total_price = OrderItem.objects.aggregate(total_price=models.Sum('price'))['total_price']
-    return render(request, 'userprofile/dashboard/earnings.html', {'total_order_price': total_price})
+def earnings(request):
+    # Debug prints
+    print("Vendor:", request.user)
+    
+    try:
+        vendor_balance = VendorBalance.objects.get(vendor=request.user)
+        
+        total_earnings = vendor_balance.get_total_earnings()
+        print("Total Earnings:", total_earnings)
+        
+        available_balance = vendor_balance.get_available_balance()
+        print("Available Balance:", available_balance)
+        
+        pending_withdrawals = WithdrawalRequest.objects.filter(
+            vendor=request.user,
+            status='pending'
+        ).aggregate(total=models.Sum('amount'))['total'] or Decimal('0.00')
+        print("Pending Withdrawals:", pending_withdrawals)
+        
+        completed_orders = Order.objects.filter(
+            items__product__user=request.user,
+            status=Order.DELIVERED,
+            is_paid=True
+        ).distinct().count()
+        print("Completed Orders:", completed_orders)
+        
+        context = {
+            'total_earnings': total_earnings,
+            'available_balance': available_balance,
+            'pending_withdrawals': pending_withdrawals,
+            'total_orders': completed_orders,
+        }
+        
+        return render(request, 'userprofile/dashboard/earnings.html', context)
+    
+    except VendorBalance.DoesNotExist:
+        print("No vendor balance found for this user")
+        # Handle the case where no VendorBalance exists
+        context = {
+            'total_earnings': Decimal('0.00'),
+            'available_balance': Decimal('0.00'),
+            'pending_withdrawals': Decimal('0.00'),
+            'total_orders': 0,
+        }
+        return render(request, 'userprofile/dashboard/earnings.html', context)
 
 @login_required
-def total_price_delivered_orders(request):
-    total_price = Order.objects.filter(user=request.user, status='delivered').aggregate(total_price=models.Sum('total_price'))['total_price']
-    return render(request, 'userprofile/dashboard/earnings.html', {'total_earned_price': total_price})
+def request_withdrawal(request):
+    if request.method == 'POST':
+        amount = Decimal(request.POST.get('amount'))
+        vendor_balance = VendorBalance.objects.get(vendor=request.user)
+        available_balance = vendor_balance.get_available_balance()
+        
+        # Validate withdrawal amount
+        if amount < Decimal('100'):
+            messages.error(request, 'Minimum withdrawal amount is ZMW 100.00')
+            return redirect('earnings')
+        
+        if amount > available_balance:
+            messages.error(request, 'Insufficient balance')
+            return redirect('earnings')
+        
+        # Create withdrawal request
+        WithdrawalRequest.objects.create(
+            vendor=request.user,
+            amount=amount,
+            status='pending'
+        )
+        
+        messages.success(request, 'Withdrawal request submitted successfully')
+    
+    return redirect('earnings')
     
 
 @login_required
@@ -195,9 +260,6 @@ def vendor_products(request):
     products = request.user.products.exclude(status=Product.DELETED)
     return render(request, 'userprofile/dashboard/product.html',{'products':products})
 
-@login_required
-def earnings(request):
-    return render(request, 'userprofile/dashboard/earnings.html')
 
 @login_required
 def orders(request):
@@ -212,3 +274,39 @@ def dashboard(request):
     data = [status['count'] for status in status_counts]
     return render(request, 'userprofile/dashboard/dashboard.html',{'labels': labels, 'data': data})
 
+@login_required
+def kyc_submit(request):
+    if request.method == 'POST':
+        full_name = request.POST['full_name']
+        email = request.POST['email']
+        id_document = request.FILES['id_document']
+        address_proof = request.FILES['address_proof']
+
+        seller_kyc, created = SellerKYC.objects.get_or_create(user=request.user)
+        seller_kyc.full_name = full_name
+        seller_kyc.email = email
+        seller_kyc.id_document = id_document
+        seller_kyc.address_proof = address_proof
+        seller_kyc.save()
+
+        # Send email to the user
+        send_mail(
+            'KYC Documents Submitted Successfully',
+            f'Dear {full_name},\n\nYour KYC documents have been successfully submitted. We will review them and get back to you shortly.\n\nBest Regards,\nYour Team',
+            'your_email@example.com',
+            [email],
+            fail_silently=False,
+        )
+
+        # Send email to the admin
+        send_mail(
+            'New KYC Submission',
+            f'A new KYC submission has been received from {full_name} ({email}).\nPlease review the documents and take the necessary actions.',
+            'your_email@example.com',
+            ['malatefriday12@gmail.com'],  # Replace with your admin email
+            fail_silently=False,
+        )
+
+        return redirect('instructions')  # Redirect to a success page
+
+    return render(request, 'userprofile/seller_kyc.html')

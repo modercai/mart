@@ -1,86 +1,144 @@
 {% extends "core/base.html" %}
 
-{% block title %}Detail{% endblock title %}
+{% block title %}{{ product.title }} - Detail{% endblock title %}
 
 {% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="grid md:grid-cols-2 gap-8">
+        <!-- Product Image Gallery -->
+        <div x-data="productGallery()" class="space-y-4">
+            <div class="relative overflow-hidden rounded-xl shadow-lg">
+                <img 
+                    :src="currentImage" 
+                    class="w-full h-[500px] object-cover transition-transform duration-300 hover:scale-105" 
+                    :alt="'Product image ' + (currentImageIndex + 1)"
+                >
+                <!-- Image Navigation Arrows -->
+                <button 
+                    x-show="images.length > 1" 
+                    x-on:click="previousImage" 
+                    class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/70 rounded-full p-2 hover:bg-white/90 transition"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <button 
+                    x-show="images.length > 1" 
+                    x-on:click="nextImage" 
+                    class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/70 rounded-full p-2 hover:bg-white/90 transition"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
 
-<div class="pl-20">
-    <div class="py-6 ">    
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div class="flex flex-col md:flex-row -mx-4">
-          <div class="md:flex-1 px-4">
-            {% if product.image %}
-            <div x-data="{ image: 1, images: ['{{ product.image.url }}', '{{ product.image.url }}', '{{ product.image.url }}', '{{ product.image.url }}'] }" x-cloak>
-            {% else %}
-            <div x-data="{ image: 1, images: ['{{ product.get_thumbnail }}', '{{ product.get_thumbnail }}', '{{ product.get_thumbnaill }}', '{{ product.get_thumbnail }}'] }" x-cloak>
-            {% endif %}
-            
-              <div class="h-64 md:h-80 rounded-lg bg-gray-100 mb-4">
-                <div x-show="image === 1" class="h-64 md:h-80 rounded-lg bg-gray-100 mb-4 flex items-center justify-center">
-                  <img :src="images[0]" class="h-full w-full object-cover" alt="Image 1">
-                </div>
-    
-                <div x-show="image === 2" class="h-64 md:h-80 rounded-lg bg-gray-100 mb-4 flex items-center justify-center">
-                  <img :src="images[1]" class="h-full w-full object-cover" alt="Image 2">
-                </div>
-    
-                <div x-show="image === 3" class="h-64 md:h-80 rounded-lg bg-gray-100 mb-4 flex items-center justify-center">
-                  <img :src="images[2]" class="h-full w-full object-cover" alt="Image 3">
-                </div>
-    
-                <div x-show="image === 4" class="h-64 md:h-80 rounded-lg bg-gray-100 mb-4 flex items-center justify-center">
-                  <img :src="images[3]" class="h-full w-full object-cover" alt="Image 4">
-                </div>
-              </div>
-    
-              <div class="flex -mx-2 mb-4">
-                <template x-for="i in 4">
-                  <div class="flex-1 px-2">
-                    <button x-on:click="image = i" :class="{ 'ring-2 ring-indigo-300 ring-inset': image === i }" class="focus:outline-none w-full rounded-lg h-24 md:h-32 bg-gray-100 flex items-center justify-center">
-                      <span x-text="i" class="text-2xl"></span>
+            <!-- Thumbnail Navigation -->
+            <div class="flex space-x-2 justify-center">
+                <template x-for="(img, index) in images" :key="index">
+                    <button 
+                        x-on:click="currentImageIndex = index"
+                        :class="{'ring-2 ring-indigo-500': currentImageIndex === index}"
+                        class="w-16 h-16 rounded-lg overflow-hidden border-2 border-transparent hover:border-indigo-300 transition"
+                    >
+                        <img :src="img" class="w-full h-full object-cover" :alt="'Thumbnail ' + (index + 1)">
                     </button>
-                  </div>
                 </template>
-              </div>
             </div>
-          </div>
-          <div class="md:flex-1 px-4">
-            <h2 class="mb-2 leading-tight tracking-tight font-bold text-gray-800 text-2xl md:text-3xl">{{product.title}}</h2>
-            <p class="text-gray-500 text-sm">By <a href="{% url 'vendor_detail' product.user.id %}" class="text-indigo-600 hover:underline">{% firstof product.user.get_full_name product.user.username %}</a></p>
-    
-            <p class="text-gray-500">{% if product.description %}
-            
-           {{product.description}}
-            {% endif %}</p>
-    
-            <div class="flex py-4 space-x-4">
-              <div class="relative">
-                <div class="text-center left-0 pt-2 right-0 absolute block text-xs uppercase text-gray-400 tracking-wide font-semibold">Qty</div>
-                <select class="cursor-pointer appearance-none rounded-xl border border-gray-200 pl-4 pr-8 h-14 flex items-end pb-1">
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </select>
-    
-                <svg class="w-5 h-5 text-gray-400 absolute right-0 bottom-0 mb-2 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
-                </svg>
-              </div>
-    
-              <a href="{% url 'add_to_cart' product.id %}" class="h-14 px-6 py-2 font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white">
-                Add to Cart
-              </a>
-            </div>
-          </div>
         </div>
-      </div>
+
+        <!-- Product Information -->
+        <div>
+            <div class="mb-6">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ product.title }}</h1>
+                <div class="flex items-center space-x-4 mb-4">
+                    <p class="text-gray-600">By 
+                        <a href="{% url 'vendor_detail' product.user.id %}" class="text-indigo-600 hover:underline font-semibold">
+                            {% firstof product.user.get_full_name product.user.username %}
+                        </a>
+                    </p>
+        <!-- TODO: include the rating for products -->
+                    {% if product.rating %} 
+                    <div class="flex items-center">
+                        {% for i in product.rating %}
+                            <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z" />
+                            </svg>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if product.description %}
+                <p class="text-gray-700 mb-6 leading-relaxed">{{ product.description }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Price and Add to Cart Section -->
+            <div class="bg-gray-100 p-6 rounded-xl">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-3xl font-bold text-gray-900">${{ product.price|floatformat:2 }}</span>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <select 
+                                x-data="quantitySelect()"
+                                x-model="quantity"
+                                class="appearance-none w-24 py-2 px-3 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            >
+                                <template x-for="n in 5" :key="n">
+                                    <option :value="n" x-text="n"></option>
+                                </template>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <a 
+                            href="{% url 'add_to_cart' product.id %}" 
+                            class="flex items-center justify-center w-full px-6 py-3 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-300 space-x-2"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <span>Add to Cart</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-      </body>
-    <!-- partial -->
-      <script src='https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.3/dist/alpine.min.js'></script>
-    </html>
-    
-    </div>
+</div>
+
+<script>
+function productGallery() {
+    return {
+        images: [
+            '{{ product.image.url }}', 
+            '{{ product.get_thumbnail }}', 
+            '{{ product.image.url }}', 
+            '{{ product.get_thumbnail }}'
+        ],
+        currentImageIndex: 0,
+        get currentImage() {
+            return this.images[this.currentImageIndex];
+        },
+        nextImage() {
+            this.currentImageIndex = (this.currentImageIndex + 1) % this.images.length;
+        },
+        previousImage() {
+            this.currentImageIndex = (this.currentImageIndex - 1 + this.images.length) % this.images.length;
+        }
+    }
+}
+
+function quantitySelect() {
+    return {
+        quantity: 1
+    }
+}
+</script>
 {% endblock content %}

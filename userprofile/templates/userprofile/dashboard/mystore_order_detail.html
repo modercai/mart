@@ -1,0 +1,64 @@
+{% extends "userprofile/dashboard/dashboard.html" %}
+
+{% block title %}Order Detail - {{ order.id }}{% endblock title %}
+
+{% block content %}
+<div class="w-full h-screen overflow-x-hidden border-t flex flex-col">
+
+
+<div class="container mx-auto p-6">
+    <!-- Page Title -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+        <!-- Order Information -->
+        <h2 class="text-2xl font-semibold mb-4">Order Information</h2>
+        <div class="space-y-2 text-lg">
+            <p><span class="font-semibold">Customer Name:</span> {{ order.first_name }} {{ order.last_name }}</p>
+            <p><span class="font-semibold">Address:</span> {{ order.address }}</p>
+            <p><span class="font-semibold">Town:</span> {{ order.town }}</p>
+            <p><span class="font-semibold">Phone Number:</span> {{ order.phone_number }}</p>
+            <p><span class="font-semibold">Total Amount:</span> ZMW {{ order.paid_amount }}</p>
+            <p><span class="font-semibold">Status:</span> <span class="capitalize">{{ order.status }}</span></p>
+        </div>
+
+        <!-- Order Items -->
+        <h2 class="text-2xl font-semibold mt-8 mb-4">Order Items</h2>
+        <table class="w-full table-auto border-collapse">
+            <thead>
+                <tr class="bg-gray-100 border-b">
+                    <th class="py-2 px-4 text-left font-medium">Product Name</th>
+                    <th class="py-2 px-4 text-left font-medium">Price</th>
+                    <th class="py-2 px-4 text-left font-medium">Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                {% if item.product.user == request.user %}
+                <tr class="border-b">
+                    <td class="py-2 px-4">{{ item.product.title }}</td>
+                    <td class="py-2 px-4">ZMW {{ item.price }}</td>
+                    <td class="py-2 px-4">{{ item.quantity }}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Update Order Status -->
+        {% if order.status != 'delivered' %}
+        <div class="mt-8">
+            <h2 class="text-2xl font-semibold">Update Order Status</h2>
+            <form method="post" action="{% url 'update_order_status' order.id %}" class="space-y-4">
+                {% csrf_token %}
+                <select name="status" class="block w-full p-3 border border-gray-300 rounded-md">
+                    <option value="processed" {% if order.status == 'processed' %}selected{% endif %}>Processed</option>
+                    <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Shipped</option>
+                    <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Delivered</option>
+                </select>
+                <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition duration-200">Update</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+</div>
+{% endblock %}

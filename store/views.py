@@ -25,7 +25,6 @@ from django.conf import settings
 from django.utils.html import strip_tags
 import os
 
-
 # Create your views here.
 
 def search(request):
@@ -35,9 +34,12 @@ def search(request):
     
 
 def category_detail(request, slug):
-    categories = get_object_or_404(Category,slug=slug)
-    products = categories.products.all()
-    return render(request,'store/category_detail.html',{'categories':categories,'products':products})
+    category = get_object_or_404(Category, slug=slug)
+    products = category.products.all()  # Make sure this matches your model relationship
+    return render(request, 'store/category_detail.html', {
+        'category': category,
+        'products': products
+    })
 
 def product_detail(request,category_slug, slug):
     product = get_object_or_404(Product,slug= slug)
@@ -87,7 +89,6 @@ def checkout(request):
         'form': form,
         'cart': cart
     })
-
 
 
 @login_required
@@ -201,6 +202,8 @@ def update_quantity(request,product_id):
         cart = Cart(request)
         cart.add(product_id,quantity,True)
     return redirect('cart_view')
+
+
 
 
 
