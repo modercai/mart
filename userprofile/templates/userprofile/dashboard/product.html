@@ -1,44 +1,50 @@
 {% extends "userprofile/dashboard/dashboard.html" %}
 
 {% block title %}My Products{% endblock title %}
+
 {% block content %}
-<div class="w-full h-screen overflow-x-hidden border-t flex flex-col">
-<main class="w-full flex-grow p-6">
-    
-    <div class="h-full flex flex-wrap justify-center">
-        {% if request.user.products.all %}
-            {% for product in products %}
-                <div class="m-4 max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
-                    <div class="relative flex flex-col rounded-xl bg-gray-100 bg-clip-border text-gray-700 shadow-md">
-                        <div class="relative h-72 overflow-hidden rounded-t-xl bg-white bg-clip-border text-gray-700">
-                            {% if product.image %}
-                                <img src="{{ product.image.url }}" class="h-full w-full object-cover" alt="{{ product.title }}" />
-                            {% endif %}
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-2 flex items-center justify-between">
-                                <p class="block font-sans text-base font-medium leading-relaxed text-blue-gray-900 antialiased">
-                                    {{ product.title }}
-                                </p>
-                                <p class="block font-sans text-base font-medium leading-relaxed text-blue-gray-900 antialiased">
-                                    ZK {{ product.price }}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="p-6 pt-0">
-                            <a href="{% url 'edit-product' product.id %}">
-                                <button class="block w-full select-none rounded-lg bg-gray-200 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-blue-gray-900 transition-all hover:scale-105 focus:scale-105 focus:opacity-[0.85] active:scale-100 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button"> 
-                                    Edit
-                                </button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <h3 class="text-2xl">You currently don't have any products. Click the button at the top to add some products.</h3>
-        {% endif %}
+<div class="w-full px-6 py-6 mx-auto">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold dark:text-white">My Products</h2>
+        <a href="{% url 'add_product' %}" class="inline-block px-4 py-2 text-xs font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer bg-gradient-to-tl from-blue-500 to-violet-500 leading-normal ease-in tracking-tight-rem shadow-md bg-150 bg-x-25 hover:scale-102 active:opacity-85">
+            Add New Product
+        </a>
     </div>
-</main>
+
+    {% if request.user.products.all %}
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {% for product in products %}
+        <div class="relative flex flex-col bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl">
+            <div class="relative h-48 overflow-hidden rounded-t-2xl">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="object-cover w-full h-full" alt="{{ product.title }}" />
+                {% else %}
+                    <div class="flex items-center justify-center w-full h-full bg-gray-200 dark:bg-slate-700">
+                        <span class="text-gray-500 dark:text-gray-300">No Image</span>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="flex-auto p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <h5 class="text-sm font-bold dark:text-white">{{ product.title }}</h5>
+                    <p class="text-sm text-gray-600 dark:text-gray-300">ZK {{ product.price|floatformat:2 }}</p>
+                </div>
+                <div class="mt-4">
+                    <a href="{% url 'edit-product' product.id %}" class="inline-block w-full px-6 py-2 text-xs font-bold text-center text-white uppercase transition-all rounded-lg bg-gradient-to-tl from-blue-500 to-violet-500 hover:opacity-90">
+                        Edit Product
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-12">
+        <h3 class="text-xl text-gray-600 dark:text-gray-300">
+            You currently don't have any products. 
+            <a href="{% url 'add_product' %}" class="text-blue-500 hover:underline">Click here to add your first product</a>.
+        </h3>
+    </div>
+    {% endif %}
 </div>
 {% endblock content %}

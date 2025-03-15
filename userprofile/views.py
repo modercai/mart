@@ -36,9 +36,12 @@ def vendor_detail(request, pk):
 
 @login_required
 def mystore(request):
-    products = request.user.products.exclude(status=Product.DELETED)
-    order_items = OrderItem.objects.filter(product__user=request.user)
-    return render(request, 'userprofile/dashboard/dashboard.html',{'products':products,'order_items':order_items})
+    context = {
+        'current_page': 'dashboard',
+        'products': request.user.products.exclude(status=Product.DELETED),
+        'order_items': OrderItem.objects.filter(product__user=request.user)
+    }
+    return render(request, 'userprofile/dashboard/dashboard.html', context)
 
 @login_required
 def mystore_order_detail(request, pk):
@@ -47,8 +50,11 @@ def mystore_order_detail(request, pk):
 
 def orders_view(request):
     order_items = OrderItem.objects.all()
-    table = OrderTable(order_items) 
-    return render(request, 'userprofile/dashboard/dashboard.html', {'table': table})
+    context ={
+        
+        'table': OrderTable(order_items) 
+    }
+    return render(request, 'userprofile/dashboard/dashboard.html', context)
 
 #allow the vendor to change the order status of the item
 @login_required
@@ -138,12 +144,24 @@ def earnings(request):
         print("Completed Orders:", completed_orders)
         
         context = {
+            'current_page': 'earnings',  # Changed from earnings to 'earnings'
             'total_earnings': total_earnings,
             'available_balance': available_balance,
             'pending_withdrawals': pending_withdrawals,
             'total_orders': completed_orders,
         }
         
+        return render(request, 'userprofile/dashboard/earnings.html', context)
+    
+    except VendorBalance.DoesNotExist:
+        # Handle case where vendor balance doesn't exist
+        context = {
+            'current_page': 'earnings',
+            'total_earnings': Decimal('0.00'),
+            'available_balance': Decimal('0.00'),
+            'pending_withdrawals': Decimal('0.00'),
+            'total_orders': 0,
+        }
         return render(request, 'userprofile/dashboard/earnings.html', context)
     
     except VendorBalance.DoesNotExist:
@@ -154,6 +172,8 @@ def earnings(request):
             'available_balance': Decimal('0.00'),
             'pending_withdrawals': Decimal('0.00'),
             'total_orders': 0,
+            'current_page': earnings,
+
         }
         return render(request, 'userprofile/dashboard/earnings.html', context)
 
@@ -187,21 +207,23 @@ def request_withdrawal(request):
 
 @login_required
 def add_product(request):
+    context = {
+        'current_page': 'add_product',
+        'title': 'Add product',
+        'form': ProductForm() if request.method == 'GET' else ProductForm(request.POST, request.FILES)
+    }
+    
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
-        if form.is_valid():
+        if context['form'].is_valid():
             title = request.POST.get('title')
-            product = form.save(commit=False)
+            product = context['form'].save(commit=False)
             product.user = request.user
             product.slug = slugify(title)
             product.save()
             messages.success(request, "Product added successfully.") 
             return redirect('vendor-products')
-    else:
-        form = ProductForm()
-    return render(request, 'userprofile/add_product.html',{
-        'title': 'Add product',
-        'form':form})
+    
+    return render(request, 'userprofile/add_product.html', context)
 
 
 @login_required
@@ -257,15 +279,23 @@ def seller_instructions(request):
 
 @login_required
 def vendor_products(request):
-    products = request.user.products.exclude(status=Product.DELETED)
-    return render(request, 'userprofile/dashboard/product.html',{'products':products})
+    context = {
+        'current_page': 'vendor_products',
+        'title': 'My products',
+        'products': request.user.products.exclude(status=Product.DELETED)
+    }
+    return render(request, 'userprofile/dashboard/product.html',context)
 
 
 @login_required
 def orders(request):
-    order_items = OrderItem.objects.filter(product__user=request.user)
+    context = {
+        'current_page': 'orders',
+        'title': 'My products',
+        'order_items': OrderItem.objects.filter(product__user=request.user)
+    }
     products = request.user.products.exclude(status=Product.DELETED)
-    return render(request, 'userprofile/dashboard/orders.html',{'order_items':order_items,})
+    return render(request, 'userprofile/dashboard/orders.html',context)
 
 # data to be displayed on the database
 def dashboard(request):
